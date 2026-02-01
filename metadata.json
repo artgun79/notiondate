@@ -1,0 +1,8 @@
+
+{
+  "name": "Notion Hybrid Widget",
+  "description": "A clean, Notion-friendly widget featuring real-time date (YYYY-MM-DD), time (12h format), and live weather updates with location search.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
