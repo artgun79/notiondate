@@ -1,0 +1,619 @@
+<title>클라이 AI 오피스</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* 레이아웃: 왼쪽은 3D 사무실 무대, 오른쪽은 직원 카드와 업무판이 쌓이는 운영 패널 */
+:root{
+  --bg:#eceff4; --panel:#ffffff; --panel-2:#f5f7fa; --line:#d6dde6; --line-2:#e6ebf1;
+  --ink:#141a23; --ink-2:#4d5a6a; --ink-3:#8492a3;
+  --brand:#2b5cd9; --brand-soft:#e2e9fd; --brand-ink:#1d3f96;
+  --amber:#b4610d; --amber-soft:#fbead4;
+  --teal:#0d7059; --teal-soft:#d9f0ea;
+  --rose:#a8324a; --rose-soft:#fae0e6;
+  --grass:#3f6b21; --grass-soft:#e6f0da;
+  --f-sans:"IBM Plex Sans KR",-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"Courier New",monospace;
+  --r:11px;
+  --sh:0 1px 2px rgba(20,26,35,.06),0 8px 24px -12px rgba(20,26,35,.18);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1218; --panel:#151c25; --panel-2:#1b232e; --line:#2a3441; --line-2:#222b36;
+  --ink:#e7edf4; --ink-2:#a1b0c1; --ink-3:#6d7d90;
+  --brand:#7ea3ff; --brand-soft:#1c2a49; --brand-ink:#bed0ff;
+  --amber:#e3a35c; --amber-soft:#3a2a15;
+  --teal:#4fc0a4; --teal-soft:#123027;
+  --rose:#e08195; --rose-soft:#381a22;
+  --grass:#94c46a; --grass-soft:#1f2c15;
+  --sh:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0d1218; --panel:#151c25; --panel-2:#1b232e; --line:#2a3441; --line-2:#222b36;
+  --ink:#e7edf4; --ink-2:#a1b0c1; --ink-3:#6d7d90;
+  --brand:#7ea3ff; --brand-soft:#1c2a49; --brand-ink:#bed0ff;
+  --amber:#e3a35c; --amber-soft:#3a2a15;
+  --teal:#4fc0a4; --teal-soft:#123027;
+  --rose:#e08195; --rose-soft:#381a22;
+  --grass:#94c46a; --grass-soft:#1f2c15;
+  --sh:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-sans);line-height:1.55;margin:0}
+.wrap{max-width:1280px;margin:0 auto;padding-block:20px 40px;padding-left:16px;padding-right:16px}
+
+/* ── 머리말 ── */
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 20px;margin-bottom:16px}
+.mark{font-weight:700;font-size:1.32rem;letter-spacing:-.02em;display:flex;align-items:center;gap:9px;min-width:0}
+.mark .dot{width:11px;height:11px;border-radius:3px;background:var(--brand);flex:none;box-shadow:0 0 0 4px var(--brand-soft)}
+.tagline{color:var(--ink-2);font-size:.83rem;margin:0}
+.badge{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--brand-ink);background:var(--brand-soft);border-radius:999px;padding:3px 9px;font-weight:600}
+
+/* ── 본문 2열 ── */
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 352px;gap:16px;align-items:start}
+@media (max-width:920px){.grid{grid-template-columns:minmax(0,1fr)}}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line-2)}
+.card-h h2{margin:0;font-size:.85rem;font-weight:600;letter-spacing:-.01em}
+.card-h .sub{font-family:var(--f-mono);font-size:.68rem;color:var(--ink-3);letter-spacing:.04em}
+
+/* ── 무대 ── */
+.stage-wrap{position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0}
+#stage{display:block;width:100%;aspect-ratio:16/10;max-height:60vh;touch-action:none;cursor:grab}
+#stage.dragging{cursor:grabbing}
+.overlay{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.bubble{position:absolute;transform:translate(-50%,-100%);background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:6px 10px;font-size:.76rem;max-width:min(260px,62%);box-shadow:var(--sh);white-space:normal}
+.bubble b{display:block;font-size:.66rem;font-family:var(--f-mono);letter-spacing:.05em;color:var(--brand);margin-bottom:2px}
+.nametag{position:absolute;transform:translate(-50%,-50%);font-family:var(--f-mono);font-size:.63rem;letter-spacing:.03em;background:color-mix(in srgb,var(--panel) 84%,transparent);border:1px solid var(--line);border-radius:999px;padding:1px 7px;color:var(--ink-2);white-space:nowrap}
+.nametag.on{color:var(--teal);border-color:var(--teal)}
+.stage-hint{position:absolute;left:12px;bottom:10px;font-family:var(--f-mono);font-size:.63rem;color:var(--ink-3);background:color-mix(in srgb,var(--panel) 78%,transparent);border-radius:6px;padding:2px 7px}
+.clock{position:absolute;right:12px;top:10px;font-family:var(--f-mono);font-size:.68rem;color:var(--ink-2);background:color-mix(in srgb,var(--panel) 80%,transparent);border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-variant-numeric:tabular-nums}
+
+/* ── 조작 막대 ── */
+.bar{display:flex;flex-wrap:wrap;gap:8px;padding:11px 14px;border-top:1px solid var(--line-2)}
+button{font-family:inherit;font-size:.78rem;font-weight:500;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;transition:background .12s,border-color .12s}
+button:hover:not(:disabled){border-color:var(--brand);background:var(--brand-soft)}
+button:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+button.primary:hover:not(:disabled){background:var(--brand-ink);border-color:var(--brand-ink)}
+button.ghost{background:transparent}
+
+/* ── 직원 목록 ── */
+.staff{display:flex;flex-direction:column;gap:1px;background:var(--line-2)}
+.staff-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 14px;background:var(--panel);border:0;border-radius:0;text-align:left;width:100%;font-size:.8rem}
+.staff-row:hover{background:var(--panel-2);border-color:transparent}
+.staff-row[aria-pressed="true"]{background:var(--brand-soft)}
+.swatch{width:9px;height:26px;border-radius:3px;flex:none}
+.staff-name{font-weight:600;letter-spacing:-.01em}
+.staff-role{color:var(--ink-3);font-size:.7rem;display:block;font-weight:400}
+.pill{font-family:var(--f-mono);font-size:.63rem;letter-spacing:.04em;padding:2px 7px;border-radius:999px;white-space:nowrap;font-weight:600}
+.pill.idle{background:var(--panel-2);color:var(--ink-3)}
+.pill.work{background:var(--teal-soft);color:var(--teal)}
+.pill.meet{background:var(--amber-soft);color:var(--amber)}
+
+/* ── 상세 ── */
+.detail{padding:12px 14px;font-size:.79rem}
+.detail h3{margin:0 0 2px;font-size:.95rem;letter-spacing:-.01em}
+.detail .who{font-family:var(--f-mono);font-size:.67rem;color:var(--ink-3);letter-spacing:.05em;margin-bottom:9px}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;margin:0}
+.kv dt{font-family:var(--f-mono);font-size:.65rem;letter-spacing:.05em;color:var(--ink-3);padding-top:2px}
+.kv dd{margin:0;color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.chip{font-size:.68rem;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--ink-2);background:var(--panel-2)}
+
+/* ── 업무판 ── */
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line-2)}
+@media (max-width:520px){.board{grid-template-columns:minmax(0,1fr)}}
+.col{background:var(--panel);padding:10px;min-width:0}
+.col > h4{margin:0 0 8px;font-family:var(--f-mono);font-size:.64rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;gap:6px}
+.col > h4 span{font-variant-numeric:tabular-nums}
+.task{border:1px solid var(--line);border-left:3px solid var(--ink-3);border-radius:8px;padding:7px 9px;margin-bottom:7px;background:var(--panel-2);font-size:.76rem;cursor:pointer;width:100%;text-align:left;display:block}
+.task:hover{border-color:var(--brand)}
+.task .t{font-weight:600;letter-spacing:-.01em;display:block;margin-bottom:2px}
+.task .m{font-family:var(--f-mono);font-size:.63rem;color:var(--ink-3);letter-spacing:.03em}
+.empty{font-size:.72rem;color:var(--ink-3);border:1px dashed var(--line);border-radius:8px;padding:10px;text-align:center}
+
+/* ── 회의록 ── */
+.log{max-height:196px;overflow-y:auto;padding:10px 14px;font-size:.76rem;display:flex;flex-direction:column;gap:7px}
+.log p{margin:0;padding-left:10px;border-left:2px solid var(--line)}
+.log p b{display:block;font-family:var(--f-mono);font-size:.64rem;letter-spacing:.05em;color:var(--ink-3);font-weight:600}
+.log p.act{border-left-color:var(--brand)}
+.log p.act b{color:var(--brand)}
+
+/* ── 각주 ── */
+.note{margin-top:16px;font-size:.76rem;color:var(--ink-2);border-top:1px solid var(--line);padding-top:12px}
+.note strong{color:var(--ink)}
+.note code{font-family:var(--f-mono);font-size:.72rem;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.fallback{padding:14px;font-size:.8rem;color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div style="flex:1;min-width:220px">
+      <div class="mark"><span class="dot"></span>클라이 AI 오피스</div>
+      <p class="tagline">AI 직원 5명이 책상에 앉아 일하고, 회의실에서 의논하고, 업무판의 카드를 가져갑니다. 학원 운영 전용 — 자체 구현 1차본.</p>
+    </div>
+    <span class="badge">Prototype 0.1 · 자체 엔진</span>
+  </header>
+
+  <div class="grid">
+    <!-- 왼쪽: 무대 -->
+    <div>
+      <div class="card">
+        <div class="stage-wrap">
+          <canvas id="stage"></canvas>
+          <div class="overlay" id="overlay"></div>
+          <div class="clock" id="clock">09:00</div>
+          <div class="stage-hint">드래그 = 회전 · 휠 = 확대 · 직원 클릭 = 상세</div>
+        </div>
+        <div class="bar">
+          <button class="primary" id="btnMeet">회의 소집</button>
+          <button id="btnNext" disabled>다음 발언</button>
+          <button id="btnEnd" disabled>회의 종료 → 업무 생성</button>
+          <button class="ghost" id="btnReset">초기화</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-h"><h2>업무판</h2><span class="sub">카드를 누르면 담당 AI가 착석해 일을 시작합니다</span></div>
+        <div class="board" id="board"></div>
+      </div>
+    </div>
+
+    <!-- 오른쪽: 운영 패널 -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div class="card-h"><h2>AI 직원</h2><span class="sub" id="headcount">5명 · 대기 5</span></div>
+        <div class="staff" id="staff"></div>
+        <div class="detail" id="detail"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h2>회의록 · 활동 기록</h2><span class="sub" id="logcount">0건</span></div>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="note"><strong>이 화면이 무엇인가</strong> — DeskRPG를 쓰지 않고 직접 만든 자체 구현본입니다. 지금은 사무실·직원·회의·업무판이 화면에서 완전히 돌아가고, 대사와 업무 카드는 학원 실제 업무로 채운 예시 데이터입니다. 다음 단계에서 이 자리에 <code>노션 총괄 업무관리 DB</code>와 실제 AI 실행을 연결하면 그대로 제품이 됩니다.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  var canvas=document.getElementById("stage");
+  if(typeof THREE==="undefined"){
+    canvas.parentNode.innerHTML='<div class="fallback">3D 엔진(three.js)을 불러오지 못했습니다. 네트워크를 확인하고 새로 고침해 주세요. 아래 업무판과 직원 목록은 그대로 작동합니다.</div>';
+  }
+
+  /* ───────── 데이터: AI 직원 5명 ───────── */
+  var AGENTS=[
+    {id:"kai",   name:"Kai",   role:"교무실장",   hex:0x2b5cd9, css:"#2b5cd9",
+     scope:"수업·교재·숙제표·성적", tools:["노션","구글드라이브","숙제표 스킬"], center:"교무 운영센터",
+     desk:[-6.6,-3.0]},
+    {id:"ada",   name:"Ada",   role:"행정실장",   hex:0x0d7059, css:"#0d7059",
+     scope:"학생DB·수납·휴퇴원·공지", tools:["노션","구글시트","지메일"], center:"행정 운영센터",
+     desk:[-2.6,-3.0]},
+    {id:"nova",  name:"Nova",  role:"마케팅실장", hex:0xb4610d, css:"#b4610d",
+     scope:"안내문·블로그·영상·포스터", tools:["Higgsfield","Adobe","노션"], center:"안내문모음",
+     desk:[1.4,-3.0]},
+    {id:"atlas", name:"Atlas", role:"데이터실장", hex:0xa8324a, css:"#a8324a",
+     scope:"매출·출결·통계·리포트", tools:["구글시트","드라이브","노션"], center:"관리자 운영센터",
+     desk:[5.4,-3.0]},
+    {id:"iris",  name:"Iris",  role:"비서실장",   hex:0x3f6b21, css:"#3f6b21",
+     scope:"일정·메일·회의록·업무배분", tools:["캘린더","지메일","Zoom"], center:"총괄 업무관리 DB",
+     desk:[-6.6,1.4]}
+  ];
+  var BY={}; AGENTS.forEach(function(a){ a.state="idle"; a.task=null; BY[a.id]=a; });
+
+  /* ───────── 데이터: 업무 카드 ───────── */
+  var SEED=[
+    {id:"t1", title:"Bronze2 숙제표 달력 10월분",      owner:"kai",   tag:"드림코스"},
+    {id:"t2", title:"10월 미납 3건 점검 · 담임 통보",   owner:"ada",   tag:"행정"},
+    {id:"t3", title:"겨울특강 학부모 안내문 초안",        owner:"nova",  tag:"마케팅"},
+    {id:"t4", title:"9월 출결·재원 현황 리포트",         owner:"atlas", tag:"데이터"},
+    {id:"t5", title:"엑셀코스 중간고사 대비 일정 확정",    owner:"iris",  tag:"엑셀코스"}
+  ];
+  var tasks=SEED.map(function(t){ return {id:t.id,title:t.title,owner:t.owner,tag:t.tag,state:"todo"}; });
+
+  /* ───────── 회의 대사 (학원 실제 의제) ───────── */
+  var AGENDA="의제 — 10월 첫째 주 운영 점검";
+  var SCRIPT=[
+    {who:"iris",  say:"10월 첫째 주 점검을 시작합니다. 미납·숙제표·겨울특강 세 건입니다."},
+    {who:"ada",   say:"미납은 3건입니다. Bronze1 두 명, Gold1 한 명. 담임 확인이 먼저 필요합니다."},
+    {who:"kai",   say:"Bronze2 숙제표가 10월분부터 비어 있습니다. 워드북 삽입 기한이 이번 주 금요일입니다."},
+    {who:"nova",  say:"겨울특강 안내문은 일정이 확정돼야 문구를 잠글 수 있습니다. 링크도 같이 넣겠습니다."},
+    {who:"atlas", say:"9월 재원은 전월 대비 늘었습니다. 다만 고등부 출결이 두 반에서 떨어졌습니다."},
+    {who:"iris",  say:"정리합니다. 미납 통보, 숙제표 제작, 특강 일정 확정을 이번 주 안에 끝냅니다."}
+  ];
+  var OUTCOME=[
+    {title:"고등부 2개 반 출결 하락 원인 점검", owner:"atlas", tag:"데이터"},
+    {title:"미납 3건 담임 확인 후 통보문 발송", owner:"ada",   tag:"행정"},
+    {title:"겨울특강 일정 확정 → 안내문 잠금",   owner:"nova",  tag:"마케팅"}
+  ];
+
+  /* ───────── 좌표 ───────── */
+  var MEET=[4.6,3.4], MEET_SEATS=[[3.0,2.6],[6.2,2.6],[2.4,4.2],[6.8,4.2],[4.6,5.2]];
+  var mode="idle", speakIdx=-1, minutes=[], clockMin=540;
+
+  /* ───────── 3D ───────── */
+  var scene,camera,renderer,ray,pointer,pickables=[],bodies={},monitors={},t0=Date.now();
+  var yaw=-0.62, pitch=0.72, dist=25, dragging=false, lastX=0, lastY=0, moved=0;
+
+  function buildScene(){
+    scene=new THREE.Scene();
+    scene.background=null;
+    camera=new THREE.PerspectiveCamera(38,16/10,0.1,200);
+    renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    renderer.shadowMap.enabled=true;
+    renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+
+    scene.add(new THREE.HemisphereLight(0xffffff,0x9aa7b8,0.78));
+    var sun=new THREE.DirectionalLight(0xfff4e2,0.9);
+    sun.position.set(9,16,8); sun.castShadow=true;
+    sun.shadow.mapSize.width=1024; sun.shadow.mapSize.height=1024;
+    sun.shadow.camera.left=-18; sun.shadow.camera.right=18;
+    sun.shadow.camera.top=18; sun.shadow.camera.bottom=-18;
+    scene.add(sun);
+
+    // 바닥
+    var floor=new THREE.Mesh(new THREE.BoxGeometry(26,0.5,20),
+      new THREE.MeshLambertMaterial({color:0xe8e3da}));
+    floor.position.y=-0.25; floor.receiveShadow=true; scene.add(floor);
+
+    // 회의실 카펫
+    var rug=new THREE.Mesh(new THREE.BoxGeometry(9,0.06,8),
+      new THREE.MeshLambertMaterial({color:0xd8dfe8}));
+    rug.position.set(MEET[0],0.03,MEET[1]); scene.add(rug);
+
+    // 회의실 유리벽 두 장
+    addGlass(0.15,3.2,8, MEET[0]-4.6, MEET[1]);
+    addGlass(9,3.2,0.15, MEET[0], MEET[1]-4.0);
+
+    // 회의 테이블
+    var tbl=new THREE.Mesh(new THREE.CylinderGeometry(1.75,1.75,0.16,28),
+      new THREE.MeshLambertMaterial({color:0xb08a5e}));
+    tbl.position.set(MEET[0],0.86,MEET[1]); tbl.castShadow=true; scene.add(tbl);
+    var leg=new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.16,0.86,12),
+      new THREE.MeshLambertMaterial({color:0x8d8d92}));
+    leg.position.set(MEET[0],0.43,MEET[1]); scene.add(leg);
+
+    // 화이트보드
+    var wb=new THREE.Mesh(new THREE.BoxGeometry(4.2,2.0,0.12),
+      new THREE.MeshLambertMaterial({color:0xfbfbf8}));
+    wb.position.set(MEET[0],1.7,MEET[1]+3.9); scene.add(wb);
+
+    // 책상 + 직원
+    AGENTS.forEach(function(a){ addDesk(a); addBody(a); });
+
+    // 화분 몇 개
+    [[-9.4,4.6],[8.8,-5.4],[-9.4,-5.6]].forEach(function(p){ addPlant(p[0],p[1]); });
+
+    window.addEventListener("resize",resize);
+    resize(); animate();
+  }
+
+  function addGlass(w,h,d,x,z){
+    var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),
+      new THREE.MeshLambertMaterial({color:0xbcd2df,transparent:true,opacity:0.32}));
+    m.position.set(x,h/2,z); scene.add(m);
+  }
+
+  function addPlant(x,z){
+    var pot=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.22,0.42,12),
+      new THREE.MeshLambertMaterial({color:0xa86a4a}));
+    pot.position.set(x,0.21,z); pot.castShadow=true; scene.add(pot);
+    var leaf=new THREE.Mesh(new THREE.SphereGeometry(0.52,12,10),
+      new THREE.MeshLambertMaterial({color:0x4f7c3a}));
+    leaf.position.set(x,0.86,z); leaf.scale.y=1.25; leaf.castShadow=true; scene.add(leaf);
+  }
+
+  function addDesk(a){
+    var x=a.desk[0], z=a.desk[1];
+    var top=new THREE.Mesh(new THREE.BoxGeometry(2.5,0.12,1.35),
+      new THREE.MeshLambertMaterial({color:0xc9a273}));
+    top.position.set(x,0.76,z); top.castShadow=true; top.receiveShadow=true; scene.add(top);
+    [[-1.1,-0.55],[1.1,-0.55],[-1.1,0.55],[1.1,0.55]].forEach(function(o){
+      var l=new THREE.Mesh(new THREE.BoxGeometry(0.11,0.76,0.11),
+        new THREE.MeshLambertMaterial({color:0x7c7c84}));
+      l.position.set(x+o[0],0.38,z+o[1]); scene.add(l);
+    });
+    // 모니터
+    var scr=new THREE.Mesh(new THREE.BoxGeometry(1.15,0.7,0.07),
+      new THREE.MeshBasicMaterial({color:0x2e3a48}));
+    scr.position.set(x,1.25,z-0.42); scene.add(scr);
+    monitors[a.id]=scr;
+    var stand=new THREE.Mesh(new THREE.BoxGeometry(0.1,0.32,0.1),
+      new THREE.MeshLambertMaterial({color:0x5c626b}));
+    stand.position.set(x,0.97,z-0.42); scene.add(stand);
+    // 의자
+    var ch=new THREE.Mesh(new THREE.BoxGeometry(0.72,0.1,0.72),
+      new THREE.MeshLambertMaterial({color:0x4b5361}));
+    ch.position.set(x,0.48,z+1.15); ch.castShadow=true; scene.add(ch);
+  }
+
+  function addBody(a){
+    var g=new THREE.Group();
+    var mat=new THREE.MeshLambertMaterial({color:a.hex});
+    var torso=new THREE.Mesh(new THREE.CylinderGeometry(0.31,0.37,0.86,14),mat);
+    torso.position.y=0.62; torso.castShadow=true; g.add(torso);
+    var head=new THREE.Mesh(new THREE.SphereGeometry(0.26,16,14),
+      new THREE.MeshLambertMaterial({color:0xf0d3ba}));
+    head.position.y=1.26; head.castShadow=true; g.add(head);
+    var hair=new THREE.Mesh(new THREE.SphereGeometry(0.265,16,12,0,Math.PI*2,0,Math.PI*0.6),mat);
+    hair.position.y=1.29; g.add(hair);
+    // 팔(발언 시 들어올림)
+    var arm=new THREE.Mesh(new THREE.CylinderGeometry(0.085,0.085,0.66,10),mat);
+    arm.position.set(0.40,0.66,0); arm.castShadow=true; g.add(arm);
+    // 클릭 판정용 투명 기둥
+    var hit=new THREE.Mesh(new THREE.CylinderGeometry(0.55,0.55,1.7,8),
+      new THREE.MeshBasicMaterial({visible:false}));
+    hit.position.y=0.85; hit.userData.agent=a.id; g.add(hit); pickables.push(hit);
+
+    g.position.set(a.desk[0], 0, a.desk[1]+1.15);
+    scene.add(g);
+    bodies[a.id]={group:g, arm:arm, torso:torso, target:new THREE.Vector3(a.desk[0],0,a.desk[1]+1.15)};
+  }
+
+  function resize(){
+    if(!renderer) return;
+    var w=canvas.clientWidth||640, h=canvas.clientHeight||400;
+    renderer.setSize(w,h,false);
+    camera.aspect=w/h; camera.updateProjectionMatrix();
+  }
+
+  function animate(){
+    requestAnimationFrame(animate);
+    if(!renderer) return;
+    var t=(Date.now()-t0)/1000;
+
+    var horiz=dist*Math.cos(pitch);
+    camera.position.set(Math.sin(yaw)*horiz, Math.max(3.5,dist*Math.sin(pitch)), Math.cos(yaw)*horiz);
+    camera.lookAt(-0.4,1.0,-0.6);
+
+    AGENTS.forEach(function(a){
+      var b=bodies[a.id]; if(!b) return;
+      b.group.position.lerp(b.target,0.06);
+      var speaking=(mode==="meeting" && speakIdx>=0 && SCRIPT[speakIdx] && SCRIPT[speakIdx].who===a.id);
+      // 팔 들기
+      var want=speaking?-2.1:0;
+      b.arm.rotation.z += (want-b.arm.rotation.z)*0.14;
+      // 일하는 중이면 살짝 흔들림
+      var bob=(a.state==="working")?Math.sin(t*7+a.desk[0])*0.035:0;
+      b.torso.position.y=0.62+bob;
+      // 모니터 밝기
+      var m=monitors[a.id];
+      if(m) m.material.color.setHex(a.state==="working"?a.hex:0x2e3a48);
+    });
+
+    renderer.render(scene,camera);
+    drawOverlay();
+  }
+
+  /* ───────── 이름표 · 말풍선 ───────── */
+  var overlay=document.getElementById("overlay");
+  function drawOverlay(){
+    if(!renderer) return;
+    var w=canvas.clientWidth, h=canvas.clientHeight, html="";
+    AGENTS.forEach(function(a){
+      var b=bodies[a.id]; if(!b) return;
+      var v=new THREE.Vector3(b.group.position.x,1.72,b.group.position.z).project(camera);
+      if(v.z>1) return;
+      var px=(v.x*0.5+0.5)*w, py=(-v.y*0.5+0.5)*h;
+      var on=(a.state!=="idle");
+      html+='<div class="nametag'+(on?" on":"")+'" style="left:'+px.toFixed(0)+'px;top:'+py.toFixed(0)+'px">'+a.name+'</div>';
+      if(mode==="meeting" && speakIdx>=0 && SCRIPT[speakIdx] && SCRIPT[speakIdx].who===a.id){
+        html+='<div class="bubble" style="left:'+px.toFixed(0)+'px;top:'+(py-16).toFixed(0)+'px"><b>'+a.name+' · '+a.role+'</b>'+esc(SCRIPT[speakIdx].say)+'</div>';
+      }
+    });
+    overlay.innerHTML=html;
+  }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]; }); }
+
+  /* ───────── 카메라 조작 ───────── */
+  canvas.addEventListener("pointerdown",function(e){
+    dragging=true; moved=0; lastX=e.clientX; lastY=e.clientY;
+    canvas.classList.add("dragging"); canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener("pointermove",function(e){
+    if(!dragging) return;
+    var dx=e.clientX-lastX, dy=e.clientY-lastY;
+    moved+=Math.abs(dx)+Math.abs(dy);
+    yaw-=dx*0.006;
+    pitch=Math.max(0.45,Math.min(1.35,pitch+dy*0.004));
+    lastX=e.clientX; lastY=e.clientY;
+  });
+  canvas.addEventListener("pointerup",function(e){
+    dragging=false; canvas.classList.remove("dragging");
+    if(moved<6) pick(e);
+  });
+  canvas.addEventListener("wheel",function(e){
+    e.preventDefault();
+    dist=Math.max(14,Math.min(38,dist+(e.deltaY>0?1.4:-1.4)));
+  },{passive:false});
+
+  function pick(e){
+    if(!renderer) return;
+    ray=ray||new THREE.Raycaster(); pointer=pointer||new THREE.Vector2();
+    var r=canvas.getBoundingClientRect();
+    pointer.x=((e.clientX-r.left)/r.width)*2-1;
+    pointer.y=-((e.clientY-r.top)/r.height)*2+1;
+    ray.setFromCamera(pointer,camera);
+    var hits=ray.intersectObjects(pickables,false);
+    if(hits.length) select(hits[0].object.userData.agent);
+  }
+
+  /* ───────── 상태 · 렌더 ───────── */
+  var selected="kai";
+  function select(id){ selected=id; renderStaff(); renderDetail(); }
+
+  function renderStaff(){
+    var idle=AGENTS.filter(function(a){return a.state==="idle";}).length;
+    document.getElementById("headcount").textContent="5명 · 대기 "+idle;
+    document.getElementById("staff").innerHTML=AGENTS.map(function(a){
+      var p=a.state==="working"?'<span class="pill work">근무</span>'
+           :a.state==="meeting"?'<span class="pill meet">회의</span>'
+           :'<span class="pill idle">대기</span>';
+      return '<button class="staff-row" data-agent="'+a.id+'" aria-pressed="'+(a.id===selected)+'">'
+        +'<span class="swatch" style="background:'+a.css+'"></span>'
+        +'<span><span class="staff-name">'+a.name+'</span>'
+        +'<span class="staff-role">'+a.role+' · '+(a.task?esc(a.task):"배정된 업무 없음")+'</span></span>'
+        +p+'</button>';
+    }).join("");
+  }
+
+  function renderDetail(){
+    var a=BY[selected];
+    document.getElementById("detail").innerHTML=
+      '<h3>'+a.name+'</h3><div class="who">'+a.role.toUpperCase()+'</div>'
+      +'<dl class="kv">'
+      +'<dt>담당</dt><dd>'+a.scope+'</dd>'
+      +'<dt>결과물</dt><dd>'+a.center+'</dd>'
+      +'<dt>도구</dt><dd><span class="chips">'+a.tools.map(function(t){return '<span class="chip">'+t+'</span>';}).join("")+'</span></dd>'
+      +'<dt>현재</dt><dd>'+(a.task?esc(a.task):"대기 중")+'</dd>'
+      +'</dl>';
+  }
+
+  function renderBoard(){
+    var cols=[["todo","할 일"],["doing","진행 중"],["done","완료"]];
+    document.getElementById("board").innerHTML=cols.map(function(c){
+      var list=tasks.filter(function(t){return t.state===c[0];});
+      var inner=list.length?list.map(function(t){
+        var a=BY[t.owner];
+        return '<button class="task" data-task="'+t.id+'" style="border-left-color:'+a.css+'">'
+          +'<span class="t">'+esc(t.title)+'</span>'
+          +'<span class="m">'+a.name+' · '+t.tag+'</span></button>';
+      }).join(""):'<div class="empty">비어 있음</div>';
+      return '<div class="col"><h4>'+c[1]+'<span>'+list.length+'</span></h4>'+inner+'</div>';
+    }).join("");
+  }
+
+  function renderLog(){
+    document.getElementById("logcount").textContent=minutes.length+"건";
+    document.getElementById("log").innerHTML=minutes.length
+      ? minutes.map(function(m){
+          return '<p class="'+(m.act?"act":"")+'"><b>'+esc(m.head)+'</b>'+esc(m.body)+'</p>';
+        }).join("")
+      : '<p style="border:0;padding:0;color:var(--ink-3)">아직 기록이 없습니다. 회의를 소집하거나 업무 카드를 눌러 보세요.</p>';
+    var el=document.getElementById("log"); el.scrollTop=el.scrollHeight;
+  }
+
+  function log(head,body,act){
+    minutes.push({head:stamp()+" · "+head, body:body, act:!!act});
+    renderLog();
+  }
+  function stamp(){
+    var h=Math.floor(clockMin/60), m=clockMin%60;
+    return (h<10?"0":"")+h+":"+(m<10?"0":"")+m;
+  }
+  function tick(n){ clockMin=Math.min(1260,clockMin+n); document.getElementById("clock").textContent=stamp(); }
+
+  /* ───────── 동작 ───────── */
+  function sitAt(a,x,z){ if(bodies[a.id]) bodies[a.id].target.set(x,0,z); }
+  function toDesk(a){ sitAt(a,a.desk[0],a.desk[1]+1.15); }
+
+  function assign(id){
+    var t=tasks.filter(function(x){return x.id===id;})[0];
+    if(!t) return;
+    var a=BY[t.owner];
+    if(t.state==="todo"){
+      if(mode==="meeting"){ log("배정 보류","회의 중입니다. 회의를 마친 뒤 배정됩니다."); return; }
+      t.state="doing"; a.state="working"; a.task=t.title; toDesk(a);
+      log(a.name+" 착석", "「"+t.title+"」 작업을 시작했습니다. 결과물은 "+a.center+"에 올라갑니다.", true);
+      tick(15);
+    } else if(t.state==="doing"){
+      t.state="done";
+      if(a.task===t.title){ a.task=null; if(mode!=="meeting") a.state="idle"; }
+      log(a.name+" 완료","「"+t.title+"」 끝. "+a.center+"에 저장하고 담당 선생님 카드를 만들었습니다.",true);
+      tick(25);
+    } else {
+      t.state="todo";
+      log("되돌림","「"+t.title+"」을 할 일로 다시 옮겼습니다.");
+    }
+    refresh();
+  }
+
+  function startMeeting(){
+    mode="meeting"; speakIdx=-1;
+    AGENTS.forEach(function(a,i){
+      a.state="meeting";
+      sitAt(a,MEET_SEATS[i][0],MEET_SEATS[i][1]);
+    });
+    log("회의 소집", AGENDA+". 5명 전원 회의실 착석. 발언권은 Iris가 돌립니다.", true);
+    document.getElementById("btnMeet").disabled=true;
+    document.getElementById("btnNext").disabled=false;
+    document.getElementById("btnEnd").disabled=false;
+    tick(5);
+    refresh();
+    nextSpeaker();
+  }
+
+  function nextSpeaker(){
+    if(mode!=="meeting") return;
+    speakIdx++;
+    if(speakIdx>=SCRIPT.length){
+      speakIdx=SCRIPT.length-1;
+      document.getElementById("btnNext").disabled=true;
+      log("발언 종료","발언이 모두 끝났습니다. 「회의 종료」를 누르면 결정 사항이 업무 카드로 만들어집니다.");
+      return;
+    }
+    var s=SCRIPT[speakIdx];
+    log(BY[s.who].name+" 발언", s.say);
+    tick(3);
+    if(speakIdx===SCRIPT.length-1) document.getElementById("btnNext").disabled=true;
+  }
+
+  function endMeeting(){
+    mode="idle"; speakIdx=-1;
+    var added=0;
+    OUTCOME.forEach(function(o,i){
+      if(tasks.some(function(t){return t.title===o.title;})) return;
+      tasks.push({id:"m"+Date.now()+i, title:o.title, owner:o.owner, tag:o.tag, state:"todo"});
+      added++;
+    });
+    AGENTS.forEach(function(a){
+      a.state=a.task?"working":"idle";
+      toDesk(a);
+    });
+    document.getElementById("btnMeet").disabled=false;
+    document.getElementById("btnNext").disabled=true;
+    document.getElementById("btnEnd").disabled=true;
+    log("회의 종료", added>0
+      ? "결정 사항 "+added+"건을 업무 카드로 만들어 담당자에게 배정했습니다. 전원 자리로 복귀."
+      : "새로 만들 카드가 없습니다. 전원 자리로 복귀.", true);
+    tick(10);
+    refresh();
+  }
+
+  function reset(){
+    mode="idle"; speakIdx=-1; minutes=[]; clockMin=540;
+    tasks=SEED.map(function(t){ return {id:t.id,title:t.title,owner:t.owner,tag:t.tag,state:"todo"}; });
+    AGENTS.forEach(function(a){ a.state="idle"; a.task=null; toDesk(a); });
+    document.getElementById("btnMeet").disabled=false;
+    document.getElementById("btnNext").disabled=true;
+    document.getElementById("btnEnd").disabled=true;
+    document.getElementById("clock").textContent=stamp();
+    refresh();
+  }
+
+  function refresh(){ renderStaff(); renderDetail(); renderBoard(); renderLog(); }
+
+  /* ───────── 배선 ───────── */
+  document.getElementById("staff").addEventListener("click",function(e){
+    var b=e.target.closest("[data-agent]"); if(b) select(b.getAttribute("data-agent"));
+  });
+  document.getElementById("board").addEventListener("click",function(e){
+    var b=e.target.closest("[data-task]"); if(b) assign(b.getAttribute("data-task"));
+  });
+  document.getElementById("btnMeet").addEventListener("click",startMeeting);
+  document.getElementById("btnNext").addEventListener("click",nextSpeaker);
+  document.getElementById("btnEnd").addEventListener("click",endMeeting);
+  document.getElementById("btnReset").addEventListener("click",reset);
+
+  refresh();
+  if(typeof THREE!=="undefined") buildScene();
+})();
+</script>
