@@ -1,7 +1,7 @@
 <title>이룸 AI 본사</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-/* 레이아웃: 왼쪽은 3D 본사 무대, 오른쪽은 팀장·AI 엔진·회의록이 쌓이는 운영 패널 */
+/* 레이아웃: 왼쪽은 3D 본사 무대, 오른쪽은 AI 현황·직원·지시·기록이 쌓이는 운영 패널 */
 :root{
   --bg:#eceef1; --panel:#ffffff; --panel-2:#f5f6f8; --line:#d8dbe0; --line-2:#e7e9ed;
   --ink:#16181c; --ink-2:#4f545c; --ink-3:#858b95;
@@ -20,10 +20,8 @@
   --bg:#0d0f12; --panel:#16191e; --panel-2:#1c2026; --line:#2b3037; --line-2:#22262c;
   --ink:#e9ebef; --ink-2:#a5abb5; --ink-3:#727984;
   --brand:#d9b271; --brand-soft:#332a18; --brand-ink:#ecd5a6;
-  --t1:#79a8d8; --t1s:#17242f;
-  --t2:#59bfa4; --t2s:#122c25;
-  --t3:#dc9a5c; --t3s:#322114;
-  --t4:#dd8399; --t4s:#301820;
+  --t1:#79a8d8; --t1s:#17242f; --t2:#59bfa4; --t2s:#122c25;
+  --t3:#dc9a5c; --t3s:#322114; --t4:#dd8399; --t4s:#301820;
   --t5:#a2c76f; --t5s:#202915;
   --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.9);
   color-scheme:dark;
@@ -32,35 +30,30 @@
   --bg:#0d0f12; --panel:#16191e; --panel-2:#1c2026; --line:#2b3037; --line-2:#22262c;
   --ink:#e9ebef; --ink-2:#a5abb5; --ink-3:#727984;
   --brand:#d9b271; --brand-soft:#332a18; --brand-ink:#ecd5a6;
-  --t1:#79a8d8; --t1s:#17242f;
-  --t2:#59bfa4; --t2s:#122c25;
-  --t3:#dc9a5c; --t3s:#322114;
-  --t4:#dd8399; --t4s:#301820;
+  --t1:#79a8d8; --t1s:#17242f; --t2:#59bfa4; --t2s:#122c25;
+  --t3:#dc9a5c; --t3s:#322114; --t4:#dd8399; --t4s:#301820;
   --t5:#a2c76f; --t5s:#202915;
   --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.9);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-sans);line-height:1.55;margin:0}
-.wrap{max-width:1340px;margin:0 auto;padding-block:20px 40px;padding-left:16px;padding-right:16px}
+.wrap{max-width:1380px;margin:0 auto;padding-block:20px 40px;padding-left:16px;padding-right:16px}
 
 header.top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 20px;margin-bottom:14px}
 .mark{font-weight:700;font-size:1.36rem;letter-spacing:-.025em;display:flex;align-items:center;gap:10px;min-width:0}
 .mark .dot{width:10px;height:22px;border-radius:2px;background:var(--brand);flex:none}
-.mark em{font-family:var(--f-mono);font-style:normal;font-size:.6em;letter-spacing:.1em;color:var(--ink-3);font-weight:500;padding-bottom:2px}
+.mark em{font-family:var(--f-mono);font-style:normal;font-size:.58em;letter-spacing:.12em;color:var(--ink-3);font-weight:500;padding-bottom:2px}
 .tagline{color:var(--ink-2);font-size:.83rem;margin:2px 0 0}
-
 .src{display:flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.04em;border:1px solid var(--line);border-radius:999px;padding:4px 11px;background:var(--panel);white-space:nowrap}
 .src .led{width:7px;height:7px;border-radius:50%;background:var(--ink-3);flex:none}
 .src.live .led{background:var(--t2);box-shadow:0 0 0 3px var(--t2s)}
 .src.live{color:var(--t2);border-color:var(--t2)}
-.src.warn .led{background:var(--t3)}
-.src.warn{color:var(--t3);border-color:var(--t3)}
-.src.demo .led{background:var(--t1)}
-.src.demo{color:var(--t1);border-color:var(--t1)}
+.src.warn .led{background:var(--t3)} .src.warn{color:var(--t3);border-color:var(--t3)}
+.src.demo .led{background:var(--t1)} .src.demo{color:var(--t1);border-color:var(--t1)}
 
-.grid{display:grid;grid-template-columns:minmax(0,1fr) 358px;gap:16px;align-items:start}
-@media (max-width:960px){.grid{grid-template-columns:minmax(0,1fr)}}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:16px;align-items:start}
+@media (max-width:1000px){.grid{grid-template-columns:minmax(0,1fr)}}
 
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
 .card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line-2);flex-wrap:wrap}
@@ -70,18 +63,20 @@ header.top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 20px;margin
 .stage-wrap{position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0;background:linear-gradient(175deg,#e6e2da 0%,#c9cdd4 100%)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .stage-wrap{background:linear-gradient(175deg,#1c1f25 0%,#0d1014 100%)}}
 :root[data-theme="dark"] .stage-wrap{background:linear-gradient(175deg,#1c1f25 0%,#0d1014 100%)}
-#stage{display:block;width:100%;aspect-ratio:16/9.4;max-height:64vh;touch-action:none;cursor:grab}
+#stage{display:block;width:100%;aspect-ratio:16/9.2;max-height:66vh;touch-action:none;cursor:grab}
 #stage.dragging{cursor:grabbing}
 .overlay{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .bubble{position:absolute;transform:translate(-50%,-100%);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 11px;font-size:.76rem;max-width:min(280px,64%);box-shadow:var(--sh)}
 .bubble b{display:block;font-size:.65rem;font-family:var(--f-mono);letter-spacing:.05em;color:var(--brand-ink);margin-bottom:2px}
-.nametag{position:absolute;transform:translate(-50%,-50%);font-size:.66rem;background:color-mix(in srgb,var(--panel) 90%,transparent);border:1px solid var(--line);border-radius:999px;padding:1px 8px;color:var(--ink-2);white-space:nowrap;font-weight:500}
-.nametag em{font-family:var(--f-mono);font-style:normal;font-size:.88em;opacity:.6;margin-left:4px}
-.nametag.on{color:var(--t2);border-color:var(--t2);background:var(--panel)}
-.stage-hint{position:absolute;left:12px;bottom:10px;font-family:var(--f-mono);font-size:.63rem;color:var(--ink-3);background:color-mix(in srgb,var(--panel) 82%,transparent);border-radius:6px;padding:2px 8px}
+.nametag{position:absolute;transform:translate(-50%,-50%);font-size:.63rem;background:color-mix(in srgb,var(--panel) 90%,transparent);border:1px solid var(--line);border-radius:999px;padding:1px 7px;color:var(--ink-2);white-space:nowrap;font-weight:500}
+.nametag.on{color:var(--t2);border-color:var(--t2);background:var(--panel);font-weight:600}
+.legend{position:absolute;right:12px;bottom:10px;background:color-mix(in srgb,var(--panel) 90%,transparent);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:.66rem;color:var(--ink-2);line-height:1.6;max-width:min(270px,58%)}
+.legend b{display:block;font-family:var(--f-mono);font-size:.6rem;letter-spacing:.08em;color:var(--ink-3);margin-bottom:3px;font-weight:600}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--brand);margin-right:4px;vertical-align:1px}
+.stage-hint{position:absolute;left:12px;bottom:10px;font-family:var(--f-mono);font-size:.62rem;color:var(--ink-3);background:color-mix(in srgb,var(--panel) 82%,transparent);border-radius:6px;padding:2px 8px}
 .clock{position:absolute;right:12px;top:10px;font-family:var(--f-mono);font-size:.69rem;color:var(--ink-2);background:color-mix(in srgb,var(--panel) 86%,transparent);border:1px solid var(--line);border-radius:6px;padding:2px 9px;font-variant-numeric:tabular-nums}
 
-.bar{display:flex;flex-wrap:wrap;gap:8px;padding:11px 14px;border-top:1px solid var(--line-2)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;padding:11px 14px;border-top:1px solid var(--line-2);align-items:center}
 button{font-family:inherit;font-size:.78rem;font-weight:500;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;transition:background .12s,border-color .12s}
 button:hover:not(:disabled){border-color:var(--brand);background:var(--brand-soft)}
 button:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
@@ -91,70 +86,86 @@ button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font
 :root[data-theme="dark"] button.primary{color:#221a08}
 button.primary:hover:not(:disabled){filter:brightness(1.08)}
 button.ghost{background:transparent}
+button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button[aria-pressed="true"]{color:#221a08}}
+:root[data-theme="dark"] button[aria-pressed="true"]{color:#221a08}
+.barnote{font-size:.7rem;color:var(--ink-3);margin-left:auto}
 
-.staff{display:flex;flex-direction:column;gap:1px;background:var(--line-2)}
-.staff-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 14px;background:var(--panel);border:0;border-radius:0;text-align:left;width:100%;font-size:.8rem}
+/* ── AI 현황 ── */
+.eng{display:flex;flex-direction:column;gap:1px;background:var(--line-2)}
+.eng-row{padding:9px 14px;background:var(--panel);font-size:.79rem}
+.eng-top{display:flex;align-items:center;gap:8px}
+.eng-dot{width:11px;height:11px;border-radius:3px;flex:none}
+.eng-name{font-weight:600;letter-spacing:-.01em}
+.eng-role{color:var(--ink-3);font-size:.68rem;margin-left:2px}
+.eng-st{margin-left:auto;font-family:var(--f-mono);font-size:.58rem;letter-spacing:.04em;padding:2px 7px;border-radius:999px;font-weight:600;background:var(--panel-2);color:var(--ink-3);white-space:nowrap}
+.eng-st.busy{background:var(--t2s);color:var(--t2)}
+.eng-jobs{margin:5px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:3px}
+.eng-jobs li{font-size:.71rem;color:var(--ink-2);padding-left:19px;position:relative;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eng-jobs li::before{content:"";position:absolute;left:8px;top:7px;width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.5}
+.eng-jobs li b{font-weight:600;color:var(--ink)}
+.eng-jobs li.none{color:var(--ink-3);font-style:normal}
+
+/* ── 직원 ── */
+.staff{display:flex;flex-direction:column;gap:1px;background:var(--line-2);max-height:330px;overflow-y:auto}
+.staff-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;padding:7px 14px;background:var(--panel);border:0;border-radius:0;text-align:left;width:100%;font-size:.78rem}
 .staff-row:hover{background:var(--panel-2);border-color:transparent}
 .staff-row[aria-pressed="true"]{background:var(--panel-2);box-shadow:inset 3px 0 0 var(--brand)}
-.swatch{width:9px;height:30px;border-radius:2px;flex:none}
+.swatch{width:8px;height:26px;border-radius:2px;flex:none}
 .staff-name{font-weight:600;letter-spacing:-.01em}
-.staff-name em{font-family:var(--f-mono);font-style:normal;font-weight:500;font-size:.78em;color:var(--ink-3);margin-left:5px}
-.staff-role{color:var(--ink-3);font-size:.7rem;display:block;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pill{font-family:var(--f-mono);font-size:.63rem;letter-spacing:.04em;padding:2px 7px;border-radius:999px;white-space:nowrap;font-weight:600}
+.staff-name .lead{font-family:var(--f-mono);font-size:.72em;color:var(--brand-ink);background:var(--brand-soft);border-radius:4px;padding:0 4px;margin-left:5px;font-weight:600}
+.staff-sub{color:var(--ink-3);font-size:.68rem;display:block;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{font-family:var(--f-mono);font-size:.6rem;letter-spacing:.04em;padding:2px 6px;border-radius:999px;white-space:nowrap;font-weight:600}
 .pill.idle{background:var(--panel-2);color:var(--ink-3)}
 .pill.work{background:var(--t2s);color:var(--t2)}
 .pill.meet{background:var(--t3s);color:var(--t3)}
 
-.detail{padding:12px 14px;font-size:.79rem;border-top:1px solid var(--line-2)}
-.detail h3{margin:0 0 2px;font-size:.98rem;letter-spacing:-.01em}
-.detail h3 em{font-family:var(--f-mono);font-style:normal;font-size:.72em;color:var(--ink-3);margin-left:6px;font-weight:500}
-.detail .who{font-family:var(--f-mono);font-size:.66rem;color:var(--ink-3);letter-spacing:.05em;margin-bottom:9px}
-.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;margin:0}
-.kv dt{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.05em;color:var(--ink-3);padding-top:2px;white-space:nowrap}
-.kv dd{margin:0;color:var(--ink-2);min-width:0}
-.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
-.chip{font-size:.68rem;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--ink-2);background:var(--panel-2)}
-.chip.eng{border-width:1px;font-weight:600}
+/* ── 지시·기록 ── */
+.memo{padding:12px 14px;font-size:.79rem}
+.memo label{display:block;font-size:.68rem;font-weight:600;letter-spacing:.03em;color:var(--brand-ink);margin:0 0 4px}
+.memo input,.memo textarea{width:100%;background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-family:inherit;font-size:.78rem;line-height:1.55}
+.memo textarea{resize:vertical;min-height:62px;margin-top:8px}
+.memo input:focus,.memo textarea:focus{border-color:var(--brand);outline:none}
+.memo .row{display:flex;gap:6px;margin-top:8px;align-items:center;flex-wrap:wrap}
+.memo .hint{font-size:.69rem;color:var(--ink-3);margin:6px 0 0}
+.memos{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:230px;overflow-y:auto}
+.memos li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;background:var(--panel-2);border:1px solid var(--line);border-left:3px solid var(--t2);border-radius:0 8px 8px 0;padding:7px 9px;font-size:.75rem}
+.memos li.off{border-left-color:var(--line);opacity:.55}
+.memos li.off .mtext{text-decoration:line-through}
+.memos li em{font-style:normal;font-family:var(--f-mono);font-size:.62rem;color:var(--ink-3);display:block}
+.memos li .tgt{font-weight:600;font-size:.72rem;display:block;color:var(--brand-ink)}
+.memos li button{font-size:.66rem;padding:2px 7px}
 
-/* ── AI 엔진 목록 ── */
-.engines{display:flex;flex-direction:column;gap:1px;background:var(--line-2)}
-.eng-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 14px;background:var(--panel);font-size:.8rem}
-.eng-dot{width:11px;height:11px;border-radius:3px;flex:none}
-.eng-name{font-weight:600;letter-spacing:-.01em}
-.eng-sub{color:var(--ink-3);font-size:.69rem;display:block;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.eng-st{font-family:var(--f-mono);font-size:.6rem;letter-spacing:.04em;padding:2px 7px;border-radius:999px;white-space:nowrap;font-weight:600;background:var(--panel-2);color:var(--ink-3)}
-.eng-st.on{background:var(--t2s);color:var(--t2)}
-.eng-foot{padding:9px 14px;font-size:.71rem;color:var(--ink-3);border-top:1px solid var(--line-2);line-height:1.5}
-
-/* ── 업무 카테고리 ── */
-.catbar{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line-2);align-items:center}
+/* ── 업무판 ── */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line-2);align-items:center}
+#q{flex:1 1 260px;min-width:0;background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-family:inherit;font-size:.79rem}
+#q:focus{border-color:var(--brand);outline:none}
+#q::placeholder{color:var(--ink-3)}
+.qhit{font-family:var(--f-mono);font-size:.68rem;color:var(--ink-3);white-space:nowrap}
+.modesw{display:flex;gap:4px}
+.modesw button{font-size:.7rem;padding:4px 9px;border-radius:7px}
+.catbar{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px;align-items:center}
 .catchip{font-size:.71rem;border:1px solid var(--line);background:var(--panel-2);color:var(--ink-2);border-radius:999px;padding:3px 10px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;font-weight:500}
 .catchip b{font-family:var(--f-mono);font-size:.9em;font-weight:600;opacity:.65}
 .catchip:hover{border-color:var(--brand);background:var(--brand-soft)}
 .catchip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .catchip[aria-pressed="true"]{color:#221a08}}
 :root[data-theme="dark"] .catchip[aria-pressed="true"]{color:#221a08}
-.catchip[aria-pressed="true"] b{opacity:.8}
-.modesw{margin-left:auto;display:flex;gap:4px}
-.modesw button{font-size:.7rem;padding:3px 9px;border-radius:7px}
-.modesw button[aria-pressed="true"]{background:var(--panel);border-color:var(--brand);color:var(--brand-ink);font-weight:600}
 
 .board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line-2)}
-@media (max-width:560px){.board{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:620px){.board{grid-template-columns:minmax(0,1fr)}}
 .col{background:var(--panel);padding:10px;min-width:0}
 .col > h4{margin:0 0 8px;font-family:var(--f-mono);font-size:.63rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;gap:6px}
-.col > h4 span{font-variant-numeric:tabular-nums}
-
 .catsec{background:var(--panel);padding:11px 14px;border-bottom:1px solid var(--line-2)}
 .catsec:last-child{border-bottom:0}
 .catsec > h4{margin:0 0 8px;font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
 .catsec > h4 .bar-mini{flex:1;height:5px;border-radius:3px;background:var(--line-2);overflow:hidden;display:flex;min-width:40px}
 .catsec > h4 .bar-mini i{display:block;height:100%}
 .catsec > h4 em{font-family:var(--f-mono);font-style:normal;font-size:.76em;color:var(--ink-3);font-weight:500;white-space:nowrap}
-.catgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:7px}
-
+.catgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:7px}
 .task{border:1px solid var(--line);border-left:3px solid var(--ink-3);border-radius:8px;padding:7px 9px;margin-bottom:7px;background:var(--panel-2);font-size:.76rem}
 .catgrid .task{margin-bottom:0}
+.task.now{border-color:var(--t2);box-shadow:0 0 0 2px var(--t2s)}
 .task .t{font-weight:600;letter-spacing:-.01em;display:block;margin-bottom:3px;word-break:break-word}
 .task .m{font-family:var(--f-mono);font-size:.62rem;color:var(--ink-3);letter-spacing:.03em;display:block}
 .task .st{font-family:var(--f-mono);font-size:.58rem;letter-spacing:.05em;padding:1px 6px;border-radius:999px;font-weight:600;margin-right:5px}
@@ -162,19 +173,19 @@ button.ghost{background:transparent}
 .task .st.doing{background:var(--t2s);color:var(--t2)}
 .task .st.done{background:var(--line-2);color:var(--ink-3)}
 .task .acts{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
-.task .acts button,.task .acts a{font-size:.68rem;padding:2px 8px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);text-decoration:none;font-family:inherit;cursor:pointer;display:inline-block}
+.task .acts button,.task .acts a{font-size:.67rem;padding:2px 8px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);text-decoration:none;font-family:inherit;cursor:pointer;display:inline-block}
 .task .acts button:hover,.task .acts a:hover{border-color:var(--brand);color:var(--brand)}
 .empty{font-size:.72rem;color:var(--ink-3);border:1px dashed var(--line);border-radius:8px;padding:12px;text-align:center}
 
-.notice{margin:0;padding:9px 14px;font-size:.75rem;border-bottom:1px solid var(--line-2);display:flex;gap:8px;align-items:flex-start}
+.notice{margin:0;padding:9px 14px;font-size:.75rem;border-bottom:1px solid var(--line-2)}
 .notice b{font-weight:600}
 .notice.info{background:var(--t1s);color:var(--t1)}
 .notice.warn{background:var(--t3s);color:var(--t3)}
 .notice.bad{background:var(--t4s);color:var(--t4)}
 
-.log{max-height:214px;overflow-y:auto;padding:10px 14px;font-size:.76rem;display:flex;flex-direction:column;gap:7px}
+.log{max-height:190px;overflow-y:auto;padding:10px 14px;font-size:.75rem;display:flex;flex-direction:column;gap:6px}
 .log p{margin:0;padding-left:10px;border-left:2px solid var(--line)}
-.log p b{display:block;font-family:var(--f-mono);font-size:.63rem;letter-spacing:.05em;color:var(--ink-3);font-weight:600}
+.log p b{display:block;font-family:var(--f-mono);font-size:.62rem;letter-spacing:.05em;color:var(--ink-3);font-weight:600}
 .log p.act{border-left-color:var(--brand)}
 .log p.act b{color:var(--brand-ink)}
 
@@ -187,9 +198,9 @@ button.ghost{background:transparent}
 
 <div class="wrap">
   <header class="top">
-    <div style="flex:1;min-width:240px">
+    <div style="flex:1;min-width:250px">
       <div class="mark"><span class="dot"></span>이룸 AI 본사<em>IRUM AI HQ</em></div>
-      <p class="tagline">5개 팀이 각자 구획에서 일하고, 엔진 룸의 AI를 불러 쓰고, 노션 업무판의 카드를 가져갑니다.</p>
+      <p class="tagline">5개 팀 12명이 각자 구획에서 일합니다. 업무는 노션에서 들어오고, 각자 쓰는 AI 엔진이 다릅니다.</p>
     </div>
     <div class="src" id="srcBadge"><span class="led"></span><span id="srcText">노션 확인 중…</span></div>
   </header>
@@ -201,19 +212,33 @@ button.ghost{background:transparent}
           <canvas id="stage"></canvas>
           <div class="overlay" id="overlay"></div>
           <div class="clock" id="clock">09:00</div>
-          <div class="stage-hint">드래그 = 회전 · 휠 = 확대 · 팀장 클릭 = 상세 · 오른쪽 끝 = AI 엔진 룸</div>
+          <div class="stage-hint">드래그 = 회전 · 휠 = 확대 · 직원 클릭 = 상세</div>
+          <div class="legend"><b>보는 법</b>
+            <i></i>일하는 직원 책상에서 오른쪽 <b style="display:inline;font-family:inherit;font-size:1em;letter-spacing:0;color:inherit">AI 엔진 룸</b>으로 작은 불빛이 날아갑니다. 그 직원이 지금 그 AI를 쓰고 있다는 뜻입니다. 누르실 것은 없습니다.
+          </div>
         </div>
         <div class="bar">
-          <button class="primary" id="btnMeet">회의 소집</button>
+          <button class="primary" id="btnAuto" aria-pressed="false">▶ 자동 운영 켜기</button>
+          <button id="btnMeet">회의 소집</button>
           <button id="btnNext" disabled>다음 발언</button>
-          <button id="btnEnd" disabled>회의 종료 → 업무 생성</button>
+          <button id="btnEnd" disabled>회의 종료</button>
           <button class="ghost" id="btnReset">초기화</button>
+          <span class="barnote">자동 운영은 <b>화면 시연</b>입니다 — 노션은 바뀌지 않습니다.</span>
         </div>
       </div>
 
       <div class="card" style="margin-top:16px">
         <div class="card-h"><h2>업무판</h2><span class="sub" id="boardSub">노션 총괄 업무관리 DB</span></div>
         <div id="boardNotice"></div>
+        <div class="toolbar">
+          <input type="search" id="q" placeholder="업무·담당자·팀·카테고리를 한 번에 찾습니다 (예: 숙제표, Lumi, 영상)" autocomplete="off">
+          <span class="qhit" id="qhit"></span>
+          <span class="modesw">
+            <button data-mode="cat" aria-pressed="true">카테고리별</button>
+            <button data-mode="status" aria-pressed="false">상태별</button>
+            <button data-mode="staff" aria-pressed="false">담당자별</button>
+          </span>
+        </div>
         <div class="catbar" id="catbar"></div>
         <div id="board"></div>
       </div>
@@ -221,25 +246,39 @@ button.ghost{background:transparent}
 
     <div style="display:flex;flex-direction:column;gap:16px">
       <div class="card">
-        <div class="card-h"><h2>팀장</h2><span class="sub" id="headcount">5팀 · 대기 5</span></div>
+        <div class="card-h"><h2>AI 엔진 현황</h2><span class="sub" id="engSub">지금 어느 AI가 무엇을</span></div>
+        <div class="eng" id="engines"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h2>대표님 지시·승인</h2><span class="sub" id="memoSub">기록 0건</span></div>
+        <div class="memo">
+          <label for="mtgt">대상 (업무 카드의 「지시」를 누르면 자동으로 채워집니다)</label>
+          <input id="mtgt" placeholder="예: 겨울특강 안내문 초안 — 또는 직접 적으세요">
+          <textarea id="mtext" placeholder="예: 좌석 48석 · 형제 5만원 할인으로 진행하세요. 문구는 Miles가 잡고 Vera 검수 후 발송."></textarea>
+          <div class="row">
+            <button class="primary" id="mSave">남기기</button>
+            <button class="ghost" id="mClear">지우기</button>
+            <span class="qhit" id="mState"></span>
+          </div>
+          <p class="hint" id="mHint">남기신 내용은 저장되어, 다음에 이 업무를 여는 AI가 먼저 읽습니다.</p>
+          <ul class="memos" id="memoList"></ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h2>직원</h2><span class="sub" id="headcount">12명</span></div>
         <div class="staff" id="staff"></div>
-        <div class="detail" id="detail"></div>
       </div>
 
       <div class="card">
-        <div class="card-h"><h2>AI 엔진</h2><span class="sub">멀티에이전트 편성</span></div>
-        <div class="engines" id="engines"></div>
-        <p class="eng-foot">색은 루원클라이 AI 본사와 같은 체계입니다. <b>연결됨</b>은 이 화면이 실제로 호출하는 것, <b>편성</b>은 본사 조직에는 있으나 이 화면에서는 배치도로만 보이는 것입니다.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-h"><h2>회의록 · 활동 기록</h2><span class="sub" id="logcount">0건</span></div>
+        <div class="card-h"><h2>활동 기록</h2><span class="sub" id="logcount">0건</span></div>
         <div class="log" id="log"></div>
       </div>
     </div>
   </div>
 
-  <p class="note"><strong>지금 어디까지 왔나</strong> — 층은 <strong>팀별 구획</strong>으로 나뉘고, 오른쪽 끝에 <strong>AI 엔진 룸</strong>이 있습니다. 팀장이 일을 시작하면 그 팀 자리에서 자기 엔진 랙까지 <strong>빛이 흘러갑니다</strong> — 어느 팀이 어느 AI를 부리는지 눈으로 보입니다. 업무판은 <code>노션 총괄 업무관리 DB</code>를 읽어 <strong>9개 업무 카테고리</strong>로 자동 분류합니다. 노션에 되돌려 쓰는 것은 다음 단계입니다.</p>
+  <p class="note"><strong>이 화면이 무엇인가</strong> — 이룸 AI 본사 한 곳에 5개 팀을 둔 구조입니다. 업무는 <code>노션 총괄 업무관리 DB</code>에서 실제로 읽어 오고, 팀 안에서 직원들에게 나눠 배정됩니다. <strong>자동 운영</strong>을 켜면 직원들이 순서대로 업무를 잡아 일하고 끝내는 흐름이 계속 돌아갑니다 — <strong>노션 데이터는 바뀌지 않는 화면 시연</strong>이고, 실제 실행 연결은 다음 단계입니다.</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -248,147 +287,175 @@ button.ghost{background:transparent}
   "use strict";
   var canvas=document.getElementById("stage");
 
-  /* ═══════ AI 엔진 — 루원클라이 AI 본사와 같은 색 체계 ═══════ */
+  /* ═══════ AI 엔진 ═══════ */
   var ENGINES=[
-    {id:"claude", name:"Claude", hex:0xe3b23c, css:"#e3b23c", role:"기획·문서·검수·노션",
-     live:true,  note:"안내문·리포트·노션 정리. 이 화면의 노션 읽기가 그 연결입니다."},
-    {id:"codex",  name:"Codex",  hex:0x4fc3ae, css:"#4fc3ae", role:"코드·자동화·이미지",
-     live:false, note:"스크립트·시트 계산·예약 작업·한글 이미지"},
-    {id:"gemini", name:"Gemini", hex:0x9b8cf0, css:"#9b8cf0", role:"디자인·멀티모달",
-     live:false, note:"포스터·썸네일·인포그래픽"},
-    {id:"higgs",  name:"Higgsfield", hex:0xe8795f, css:"#e8795f", role:"영상·이미지 생성",
-     live:false, note:"영상·합성·업스케일"},
-    {id:"anti",   name:"Antigravity", hex:0x5aa9e6, css:"#5aa9e6", role:"실행·파일 작업",
-     live:false, note:"워크플로우 집행·대량 파일 처리"}
+    {id:"claude", name:"Claude", hex:0xe3b23c, css:"#e3b23c", role:"기획·문서·검수·노션", live:true},
+    {id:"codex",  name:"Codex",  hex:0x4fc3ae, css:"#4fc3ae", role:"코드·자동화·집계", live:false},
+    {id:"gemini", name:"Gemini", hex:0x9b8cf0, css:"#9b8cf0", role:"디자인·멀티모달", live:false},
+    {id:"higgs",  name:"Higgsfield", hex:0xe8795f, css:"#e8795f", role:"영상·이미지 생성", live:false},
+    {id:"anti",   name:"Antigravity", hex:0x5aa9e6, css:"#5aa9e6", role:"실행·파일 작업", live:false}
   ];
   var ENG={}; ENGINES.forEach(function(e){ ENG[e.id]=e; });
 
-  /* ═══════ 5개 팀 · 팀장 ═══════ */
-  var AGENTS=[
-    {id:"kyomu", team:"교무팀", name:"교무팀장", en:"Kai", hex:0x2f5d8c, css:"#2f5d8c",
-     scope:"수업·교재·숙제표·성적", tools:["노션","구글드라이브","숙제표 스킬"], center:"교무 운영센터",
-     parts:["교무","Dream","Excel","고등부","담임","LT"], engines:["claude","codex"], zone:[-13.2,-7.2]},
-    {id:"haengjeong", team:"행정팀", name:"행정팀장", en:"Ada", hex:0x1f6b57, css:"#1f6b57",
-     scope:"학생DB·수납·휴퇴원·공지", tools:["노션","구글시트","지메일"], center:"행정 운영센터",
-     parts:["행정"], engines:["claude","anti"], zone:[-5.2,-7.2]},
-    {id:"marketing", team:"마케팅팀", name:"마케팅팀장", en:"Nova", hex:0xa85a1c, css:"#a85a1c",
-     scope:"안내문·블로그·영상·포스터", tools:["Higgsfield","Adobe","노션"], center:"안내문모음",
-     parts:["마케팅"], engines:["higgs","gemini","claude"], zone:[2.8,-7.2]},
-    {id:"data", team:"데이터팀", name:"데이터팀장", en:"Atlas", hex:0x8f3550, css:"#8f3550",
-     scope:"매출·출결·통계·리포트", tools:["구글시트","드라이브","노션"], center:"관리자 운영센터",
-     parts:["관리자","시설/비품"], engines:["codex","claude"], zone:[-13.2,0.6]},
-    {id:"biseo", team:"비서팀", name:"비서팀장", en:"Iris", hex:0x4c6a28, css:"#4c6a28",
-     scope:"일정·메일·회의록·업무배분", tools:["캘린더","지메일","Zoom"], center:"총괄 업무관리 DB",
-     parts:["전체"], engines:["claude"], zone:[-5.2,0.6]}
+  /* ═══════ 5개 팀 ═══════ */
+  var TEAMS=[
+    {id:"kyomu", name:"교무팀", en:"Curriculum", hex:0x2f5d8c, css:"#2f5d8c",
+     center:"교무 운영센터", parts:["교무","Dream","Excel","고등부","담임","LT"], zone:[-15.0,-8.5]},
+    {id:"haeng", name:"행정팀", en:"Admin", hex:0x1f6b57, css:"#1f6b57",
+     center:"행정 운영센터", parts:["행정"], zone:[-5.0,-8.5]},
+    {id:"mkt",   name:"마케팅팀", en:"Marketing", hex:0xa85a1c, css:"#a85a1c",
+     center:"안내문모음", parts:["마케팅"], zone:[5.0,-8.5]},
+    {id:"data",  name:"데이터팀", en:"Data", hex:0x8f3550, css:"#8f3550",
+     center:"관리자 운영센터", parts:["관리자","시설/비품"], zone:[-15.0,1.5]},
+    {id:"biseo", name:"비서팀", en:"Chief of Staff", hex:0x4c6a28, css:"#4c6a28",
+     center:"총괄 업무관리 DB", parts:["전체"], zone:[-5.0,1.5]}
   ];
-  var BY={}; AGENTS.forEach(function(a){
-    a.state="idle"; a.task=null;
-    a.desk=[a.zone[0]-1.6, a.zone[1]-0.9];
-    a.seat=[a.desk[0], a.desk[1]+1.45];
-    BY[a.id]=a;
-  });
+  var TEAM={}; TEAMS.forEach(function(t){ TEAM[t.id]=t; });
 
-  function ownerFor(parts){
-    if(parts && parts.length){
-      for(var i=0;i<AGENTS.length;i++)
+  /* ═══════ 직원 12명 — 이름은 기존 AI 본사 편성을 그대로 이어받았습니다 ═══════ */
+  var STAFF=[
+    {id:"otto",  n:"Otto",  team:"kyomu", lead:true,  eng:"claude", role:"운영·일정 설계"},
+    {id:"iris",  n:"Iris",  team:"kyomu", lead:false, eng:"claude", role:"교재·콘텐츠 설계"},
+    {id:"vera",  n:"Vera",  team:"kyomu", lead:false, eng:"claude", role:"검수·규정 확인"},
+    {id:"sage",  n:"Sage",  team:"haeng", lead:true,  eng:"claude", role:"노션 DB·학생 데이터"},
+    {id:"kit",   n:"Kit",   team:"haeng", lead:false, eng:"codex",  role:"자동화 스크립트·시트"},
+    {id:"quinn", n:"Quinn", team:"mkt",   lead:true,  eng:"claude", role:"모객 전략·채널"},
+    {id:"miles", n:"Miles", team:"mkt",   lead:false, eng:"codex",  role:"카피·안내문"},
+    {id:"lumi",  n:"Lumi",  team:"mkt",   lead:false, eng:"gemini", role:"포스터·썸네일"},
+    {id:"ray",   n:"Ray",   team:"mkt",   lead:false, eng:"higgs",  role:"영상·이미지 생성"},
+    {id:"atlas", n:"Atlas", team:"data",  lead:true,  eng:"codex",  role:"집계·리포트"},
+    {id:"nova",  n:"Nova",  team:"biseo", lead:true,  eng:"claude", role:"총괄·업무 배분"},
+    {id:"pilot", n:"Pilot", team:"biseo", lead:false, eng:"anti",   role:"실행·파일 작업"}
+  ];
+  var SBY={};
+  var SLOT=[[-2.0,-2.2],[2.0,-2.2],[-2.0,1.4],[2.0,1.4]];
+  TEAMS.forEach(function(t){
+    var mem=STAFF.filter(function(s){return s.team===t.id;});
+    t.members=mem;
+    mem.forEach(function(s,i){
+      var o=SLOT[i%4];
+      s.desk=[t.zone[0]+o[0], t.zone[1]+o[1]];
+      s.seat=[s.desk[0], s.desk[1]+1.35];
+      s.state="idle"; s.task=null; s.since=0;
+      SBY[s.id]=s;
+    });
+  });
+  var LEADS=STAFF.filter(function(s){return s.lead;});
+
+  function teamFor(parts){
+    if(parts && parts.length)
+      for(var i=0;i<TEAMS.length;i++)
         for(var j=0;j<parts.length;j++)
-          if(AGENTS[i].parts.indexOf(parts[j])>=0) return AGENTS[i].id;
-    }
+          if(TEAMS[i].parts.indexOf(parts[j])>=0) return TEAMS[i].id;
     return "biseo";
   }
 
-  /* ═══════ 업무 카테고리 — 업무명 낱말로 자동 분류 ═══════ */
+  /* ═══════ 업무 카테고리 ═══════ */
   var CATS=[
-    {id:"edu",   name:"교무·커리큘럼", css:"#2f5d8c",
-     kw:["수업","교재","커리큘럼","숙제","워드북","레벨","시험","성적","단어","문법","리딩","독해",
-         "파닉스","드림","엑셀","고등","보강","반배정","반 배정","교과","진도","클래스","LT","PT","BT","NELT","모의고사"]},
-    {id:"people",name:"인사·노무", css:"#8f3550",
-     kw:["채용","면접","지원자","이력서","급여","근로","계약","4대보험","강사","선생님","교직원",
-         "출근","근태","연차","퇴사","입사","교사","원어민","native"]},
+    {id:"edu", name:"교무·커리큘럼", css:"#2f5d8c",
+     kw:["수업","교재","커리큘럼","숙제","워드북","레벨","시험","성적","단어","문법","리딩","독해","파닉스",
+         "드림","엑셀","고등","보강","반배정","진도","클래스","LT","PT","BT","NELT","모의고사","스피킹"]},
+    {id:"people", name:"인사·노무", css:"#8f3550",
+     kw:["채용","면접","지원자","이력서","급여","근로","계약","4대보험","강사","선생님","교직원","출근",
+         "근태","연차","퇴사","입사","원어민","native"]},
     {id:"event", name:"행사·이벤트", css:"#a85a1c",
-     kw:["설명회","행사","이벤트","특강","캠프","시상","수상","대회","발표회","파티","오픈","개강","종강","방학"]},
+     kw:["설명회","행사","이벤트","특강","캠프","시상","수상","대회","발표회","오픈","개강","종강","방학"]},
     {id:"media", name:"영상·콘텐츠", css:"#e8795f",
-     kw:["영상","촬영","편집","유튜브","릴스","쇼츠","썸네일","BGM","자막","VA","브랜드필름",
-         "녹화","레디","Leddi","사진","이미지","포스터"]},
-    {id:"mkt",   name:"홍보·마케팅", css:"#c2559a",
-     kw:["마케팅","블로그","SNS","인스타","전단","배너","홍보","광고","모객","신규생","상담문의","브랜드","채널"]},
+     kw:["영상","촬영","편집","유튜브","릴스","쇼츠","썸네일","BGM","자막","VA","브랜드필름","녹화",
+         "Leddi","사진","이미지","포스터"]},
+    {id:"mkt", name:"홍보·마케팅", css:"#c2559a",
+     kw:["마케팅","블로그","SNS","인스타","전단","배너","홍보","광고","모객","신규생","브랜드","채널"]},
     {id:"money", name:"수납·재무", css:"#1f6b57",
      kw:["수납","미납","결제","환불","매출","지출","정산","학원비","교재비","카드","통장","입금","청구","할인"]},
-    {id:"parent",name:"학생·학부모", css:"#4c6a28",
-     kw:["상담","학부모","퇴원","휴원","입회","등록","출결","결석","안내문","공지","알림","문자","카톡","해피콜","전화"]},
-    {id:"sys",   name:"시스템·자동화", css:"#5aa9e6",
-     kw:["시트","노션","자동화","스크립트","DB","시스템","연동","매뉴얼","백업","웹","템플릿","양식","정리","업로드","링크"]},
-    {id:"etc",   name:"시설·기타", css:"#858b95", kw:[]}
+    {id:"parent", name:"학생·학부모", css:"#4c6a28",
+     kw:["상담","학부모","퇴원","휴원","입회","등록","출결","결석","안내문","공지","알림","문자","카톡","해피콜"]},
+    {id:"sys", name:"시스템·자동화", css:"#5aa9e6",
+     kw:["시트","노션","자동화","스크립트","DB","시스템","연동","매뉴얼","백업","웹","템플릿","양식","시간표","현황판"]},
+    {id:"etc", name:"시설·기타", css:"#858b95", kw:[]}
   ];
   var CATBY={}; CATS.forEach(function(c){ CATBY[c.id]=c; });
 
-  function classify(title, parts){
+  function classify(title,parts){
     var s=String(title||"");
     for(var i=0;i<CATS.length-1;i++){
       var kw=CATS[i].kw;
       for(var j=0;j<kw.length;j++) if(s.indexOf(kw[j])>=0) return CATS[i].id;
     }
-    /* 낱말로 못 잡으면 노션 대상파트로 한 번 더 시도한다 */
     if(parts && parts.length){
       if(parts.indexOf("마케팅")>=0) return "mkt";
       if(parts.indexOf("행정")>=0) return "parent";
       if(parts.indexOf("관리자")>=0 || parts.indexOf("시설/비품")>=0) return "sys";
-      if(parts.indexOf("교무")>=0 || parts.indexOf("Dream")>=0 || parts.indexOf("Excel")>=0
-         || parts.indexOf("고등부")>=0 || parts.indexOf("담임")>=0 || parts.indexOf("LT")>=0) return "edu";
+      for(var k=0;k<parts.length;k++)
+        if(["교무","Dream","Excel","고등부","담임","LT"].indexOf(parts[k])>=0) return "edu";
     }
     return "etc";
   }
 
-  /* ═══════ 예시 업무 (노션이 없을 때만) ═══════ */
+  /* ═══════ 업무 ═══════ */
   var SEED=[
-    {id:"x1", title:"Bronze2 숙제표 달력 10월분",     owner:"kyomu",      tag:"드림코스"},
-    {id:"x2", title:"10월 미납 3건 점검 · 담임 통보",  owner:"haengjeong", tag:"행정"},
-    {id:"x3", title:"겨울특강 학부모 안내문 초안",       owner:"marketing",  tag:"마케팅"},
-    {id:"x4", title:"9월 출결·재원 현황 리포트",        owner:"data",       tag:"데이터"},
-    {id:"x5", title:"엑셀코스 중간고사 대비 일정 확정",   owner:"biseo",      tag:"엑셀코스"}
+    {t:"Bronze2 숙제표 달력 10월분",      team:"kyomu"},
+    {t:"10월 미납 3건 점검 · 담임 통보",   team:"haeng"},
+    {t:"겨울특강 학부모 안내문 초안",        team:"mkt"},
+    {t:"겨울특강 포스터 시안 3종",          team:"mkt"},
+    {t:"설명회 브랜드필름 컷 편집",         team:"mkt"},
+    {t:"9월 출결·재원 현황 리포트",         team:"data"},
+    {t:"엑셀코스 중간고사 대비 일정 확정",   team:"biseo"},
+    {t:"드림 교재 배부 대장 정리",          team:"kyomu"},
+    {t:"신규 강사 면접 일정 조율",          team:"biseo"}
   ];
-  function seedCopy(){ return SEED.map(function(t){
-    return {id:t.id,title:t.title,owner:t.owner,tag:t.tag,state:"todo",url:null,demo:true,
-            cat:classify(t.title,null)}; }); }
-  var tasks=seedCopy(), notionLive=false, notionRows=null;
-  var catFilter="all", groupMode="cat";
+  function seedCopy(){
+    return SEED.map(function(x,i){
+      return {id:"x"+i, title:x.t, team:x.team, owner:null, due:null,
+              state:"todo", url:null, demo:true, cat:classify(x.t,null)};
+    });
+  }
+  var tasks=[], notionLive=false, notionRows=null;
+  var catFilter="all", groupMode="cat", query="", selected="otto";
+  var auto=false, autoTimer=null, minutes=[], clockMin=540;
+  var mode="idle", speakIdx=-1;
 
-  /* ═══════ 회의 대본 ═══════ */
+  /* 팀 안에서 직원들에게 돌아가며 배정한다 */
+  function assignOwners(list){
+    var ptr={}; TEAMS.forEach(function(t){ ptr[t.id]=0; });
+    list.forEach(function(t){
+      var mem=(TEAM[t.team]||TEAM.biseo).members;
+      t.owner=mem[(ptr[t.team]++)%mem.length].id;
+    });
+    return list;
+  }
+
+  /* ═══════ 회의 ═══════ */
   var AGENDA="의제 — 10월 첫째 주 운영 점검";
   var SCRIPT=[
-    {who:"biseo",      say:"10월 첫째 주 점검을 시작합니다. 미납·숙제표·겨울특강 세 건입니다."},
-    {who:"haengjeong", say:"미납은 3건입니다. Bronze1 두 명, Gold1 한 명. 담임 확인이 먼저 필요합니다."},
-    {who:"kyomu",      say:"Bronze2 숙제표가 10월분부터 비어 있습니다. 워드북 삽입 기한이 이번 주 금요일입니다."},
-    {who:"marketing",  say:"겨울특강 안내문은 일정이 확정돼야 문구를 잠글 수 있습니다. 링크도 같이 넣겠습니다."},
-    {who:"data",       say:"9월 재원은 전월 대비 늘었습니다. 다만 고등부 출결이 두 반에서 떨어졌습니다."},
-    {who:"biseo",      say:"정리합니다. 미납 통보, 숙제표 제작, 특강 일정 확정을 이번 주 안에 끝냅니다."}
+    {who:"nova",  say:"10월 첫째 주 점검을 시작합니다. 미납·숙제표·겨울특강 세 건입니다."},
+    {who:"sage",  say:"미납은 3건입니다. Bronze1 두 명, Gold1 한 명. 담임 확인이 먼저 필요합니다."},
+    {who:"otto",  say:"Bronze2 숙제표가 10월분부터 비어 있습니다. 워드북 삽입 기한이 이번 주 금요일입니다."},
+    {who:"quinn", say:"겨울특강 안내문은 일정이 확정돼야 문구를 잠급니다. 포스터는 Lumi가 같이 갑니다."},
+    {who:"atlas", say:"9월 재원은 전월 대비 늘었습니다. 다만 고등부 출결이 두 반에서 떨어졌습니다."},
+    {who:"nova",  say:"정리합니다. 미납 통보, 숙제표 제작, 특강 일정 확정을 이번 주 안에 끝냅니다."}
   ];
   var OUTCOME=[
-    {title:"고등부 2개 반 출결 하락 원인 점검", owner:"data",       tag:"데이터"},
-    {title:"미납 3건 담임 확인 후 통보문 발송", owner:"haengjeong", tag:"행정"},
-    {title:"겨울특강 일정 확정 → 안내문 잠금",   owner:"marketing",  tag:"마케팅"}
+    {t:"고등부 2개 반 출결 하락 원인 점검", team:"data"},
+    {t:"미납 3건 담임 확인 후 통보문 발송", team:"haeng"},
+    {t:"겨울특강 일정 확정 → 안내문 잠금",   team:"mkt"}
   ];
 
-  var MEET=[8.4,3.2];
-  var MEET_SEATS=[[6.0,1.0],[10.8,1.0],[5.2,4.0],[11.6,4.0],[8.4,5.8]];
-  var ENGINE_ROOM=[18.0,-2.0];
-  var mode="idle", speakIdx=-1, minutes=[], clockMin=540;
+  var MEET=[10.5,4.0];
+  var MEET_SEATS=[[8.1,1.8],[12.9,1.8],[7.3,4.8],[13.7,4.8],[10.5,6.6]];
+  var ENGINE_ROOM=[21.5,-4.5];
 
   /* ═══════ 3D ═══════ */
   var scene,camera,renderer,ray,pointer,pickables=[],bodies={},monitors={},t0=Date.now();
   var engPos={}, engLamp={}, pulses=[];
-  var yaw=-0.34, pitch=0.62, dist=36, dragging=false, lastX=0, lastY=0, moved=0;
-
-  var C={ floor:0xd6d1c7, floorLine:0xc9c3b7, wall:0xf3efe6, wallDark:0x3c3f45,
+  var yaw=-0.36, pitch=0.60, dist=48, dragging=false, lastX=0, lastY=0, moved=0;
+  var C={ floor:0xd6d1c7, floorLine:0xc9c3b7, wall:0xf3efe6, wallDark:0x30343a,
           walnut:0x9c6f47, walnutDark:0x7d5836, white:0xf7f6f3, metal:0xb8bcc2,
           charcoal:0x464b52, brass:0xd6b168, glass:0xcddeea, rack:0x262b33 };
 
   function tint(hex){
     var r=(hex>>16&255), g=(hex>>8&255), b=hex&255, m=0.78;
-    r=Math.round(r*(1-m)+232*m); g=Math.round(g*(1-m)+228*m); b=Math.round(b*(1-m)+220*m);
-    return (r<<16)|(g<<8)|b;
+    return (Math.round(r*(1-m)+232*m)<<16)|(Math.round(g*(1-m)+228*m)<<8)|Math.round(b*(1-m)+220*m);
   }
-
   function textTex(lines,w,h,bg,fg,size,weight){
     var c=document.createElement("canvas"); c.width=w; c.height=h;
     var g=c.getContext("2d");
@@ -397,6 +464,30 @@ button.ghost{background:transparent}
     g.font=(weight||600)+" "+size+"px 'IBM Plex Sans KR','Malgun Gothic',sans-serif";
     var n=lines.length, lh=size*1.3, y0=h/2-(n-1)*lh/2;
     for(var i=0;i<n;i++) g.fillText(lines[i], w/2, y0+i*lh);
+    var t=new THREE.CanvasTexture(c); t.needsUpdate=true; return t;
+  }
+  /* 현판 — 놋쇠 선 하나에 큰 한글, 아래 자간 넓힌 영문 */
+  function signTex(){
+    var w=1600,h=420,c=document.createElement("canvas"); c.width=w; c.height=h;
+    var g=c.getContext("2d");
+    g.clearRect(0,0,w,h);
+    g.textBaseline="alphabetic";
+    g.fillStyle="#f0e6d2";
+    g.font='300 150px "IBM Plex Sans KR","Malgun Gothic",sans-serif';
+    var a="이룸", wa=g.measureText(a).width;
+    g.font='700 150px "IBM Plex Sans KR","Malgun Gothic",sans-serif';
+    g.fillText(a, w/2-wa/2-70, 190);
+    g.fillStyle="#d6b168";
+    g.font='300 150px "IBM Plex Sans KR","Malgun Gothic",sans-serif';
+    g.fillText("AI 본사", w/2-wa/2+wa-40, 190);
+    /* 놋쇠 선 */
+    g.fillStyle="#d6b168"; g.fillRect(w/2-330,238,660,3);
+    /* 자간 넓힌 영문 */
+    g.fillStyle="#b9ae99"; g.font='500 46px "IBM Plex Mono",monospace';
+    var en="IRUM  AI  HEADQUARTERS", sp=13, tot=0, i;
+    for(i=0;i<en.length;i++) tot+=g.measureText(en[i]).width+sp;
+    var x=w/2-tot/2;
+    for(i=0;i<en.length;i++){ g.fillText(en[i],x,308); x+=g.measureText(en[i]).width+sp; }
     var t=new THREE.CanvasTexture(c); t.needsUpdate=true; return t;
   }
   function panel(w,h,tex,opaque){
@@ -415,67 +506,61 @@ button.ghost{background:transparent}
 
   function buildScene(){
     scene=new THREE.Scene();
-    camera=new THREE.PerspectiveCamera(35,16/9.4,0.1,300);
+    camera=new THREE.PerspectiveCamera(35,16/9.2,0.1,320);
     renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
     renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 
-    scene.add(new THREE.HemisphereLight(0xfff8ee,0x9aa2ad,0.66));
-    var key=new THREE.DirectionalLight(0xfff2de,0.78);
-    key.position.set(-10,26,18); key.castShadow=true;
+    scene.add(new THREE.HemisphereLight(0xfff8ee,0x9aa2ad,0.68));
+    var key=new THREE.DirectionalLight(0xfff2de,0.76);
+    key.position.set(-12,30,20); key.castShadow=true;
     key.shadow.mapSize.width=2048; key.shadow.mapSize.height=2048;
-    key.shadow.camera.left=-30; key.shadow.camera.right=30;
-    key.shadow.camera.top=26; key.shadow.camera.bottom=-26;
-    key.shadow.bias=-0.0007; scene.add(key);
-    var fill=new THREE.DirectionalLight(0xd8e6f7,0.3); fill.position.set(16,12,-16); scene.add(fill);
+    key.shadow.camera.left=-36; key.shadow.camera.right=36;
+    key.shadow.camera.top=30; key.shadow.camera.bottom=-30;
+    key.shadow.bias=-0.0008; scene.add(key);
+    var fill=new THREE.DirectionalLight(0xd8e6f7,0.28); fill.position.set(20,14,-18); scene.add(fill);
 
-    /* ── 바닥 ── */
-    var floor=box(46,0.5,28,C.floor,1,-0.25,0,false); floor.receiveShadow=true;
-    for(var gx=-20;gx<=22;gx+=4) flat(0.05,28,C.floorLine,gx,0.005,0);
-    for(var gz=-14;gz<=14;gz+=4) flat(46,0.05,C.floorLine,1,0.005,gz);
+    var floor=box(60,0.5,34,C.floor,2,-0.25,-2,false); floor.receiveShadow=true;
+    for(var gx=-26;gx<=30;gx+=4) flat(0.05,34,C.floorLine,gx,0.005,-2);
+    for(var gz=-18;gz<=14;gz+=4) flat(60,0.05,C.floorLine,2,0.005,gz);
 
-    /* ── 벽 ── */
-    box(46,5.6,0.3,C.wall,1,2.8,-14,false);
-    box(0.3,5.6,28,C.wall,-22,2.8,0,false);
-    box(9,5.6,0.34,C.wallDark,13,2.8,-13.9,false);
-    box(46,0.22,0.36,C.charcoal,1,0.11,-13.9,false);
-    box(0.36,0.22,28,C.charcoal,-21.9,0.11,0,false);
-    [-17.5,-12,-6.5,-1].forEach(function(x){
-      box(4.6,2.8,0.12,0xd9e8f3,x,3.1,-13.82,false);
-      box(4.9,0.16,0.22,C.white,x,4.6,-13.8,false);
-      box(4.9,0.16,0.22,C.white,x,1.7,-13.8,false);
-      box(0.14,2.8,0.22,C.white,x,3.1,-13.8,false);
+    box(60,5.8,0.3,C.wall,2,2.9,-19,false);
+    box(0.3,5.8,34,C.wall,-28,2.9,-2,false);
+    box(12,5.8,0.34,C.wallDark,15,2.9,-18.9,false);
+    box(60,0.22,0.36,C.charcoal,2,0.11,-18.9,false);
+    box(0.36,0.22,34,C.charcoal,-27.9,0.11,-2,false);
+    [-24,-18,-12,-6,0].forEach(function(x){
+      box(4.8,2.9,0.12,0xd9e8f3,x,3.3,-18.82,false);
+      box(5.1,0.16,0.22,C.white,x,4.9,-18.8,false);
+      box(5.1,0.16,0.22,C.white,x,1.85,-18.8,false);
+      box(0.14,2.9,0.22,C.white,x,3.3,-18.8,false);
     });
 
-    /* ── 리셉션 ── */
-    var logo=panel(6.6,1.5,textTex(["이룸 AI 본사","IRUM AI HQ"],660,150,null,"#e8d9b4",56,700));
-    logo.position.set(13,3.5,-13.68); scene.add(logo);
-    box(5.6,1.05,1.1,C.walnut,13,0.52,-11.2,true);
-    box(6.0,0.12,1.5,C.white,13,1.12,-11.2,true);
-    box(5.6,0.16,0.16,C.brass,13,0.98,-10.68,false);
-    addPlant(9.0,-11.6);
+    /* 현판 + 리셉션 */
+    var sign=panel(9.0,2.36,signTex()); sign.position.set(15,3.4,-18.68); scene.add(sign);
+    box(6.4,1.05,1.2,C.walnut,15,0.52,-16.4,true);
+    box(6.8,0.12,1.6,C.white,15,1.12,-16.4,true);
+    box(6.4,0.16,0.16,C.brass,15,0.98,-15.82,false);
+    addPlant(10.6,-16.8); addPlant(19.4,-16.8);
 
-    AGENTS.forEach(addZone);
+    TEAMS.forEach(addZone);
     addMeetingRoom();
     addEngineRoom();
 
-    /* ── 라운지 ── */
-    flat(7.0,6.0,0xe0dcd2,-18.5,0.03,8.5);
-    box(4.0,0.6,1.6,C.charcoal,-18.5,0.5,7.0,true);
-    box(4.0,1.0,0.36,0x525861,-18.5,1.0,7.7,true);
-    box(1.8,0.44,1.8,C.walnutDark,-18.5,0.22,9.8,true);
-    addPlant(-15.6,10.4);
-    box(0.7,1.2,0.7,C.white,-21.0,0.6,-2.0,true);
-    box(0.56,0.8,0.56,0xbfe0f0,-21.0,1.6,-2.0,true);
+    flat(7.0,6.0,0xe0dcd2,-24.0,0.03,9.0);
+    box(4.0,0.6,1.6,C.charcoal,-24.0,0.5,7.5,true);
+    box(4.0,1.0,0.36,0x525861,-24.0,1.0,8.2,true);
+    box(1.8,0.44,1.8,C.walnutDark,-24.0,0.22,10.3,true);
+    addPlant(-21.0,11.0);
 
     window.addEventListener("resize",resize);
     resize(); animate();
   }
 
   function addMeetingRoom(){
-    flat(13.6,12.6,0xdfdcd3,MEET[0],0.03,MEET[1]);
-    glassWall(0.16,3.6,12.8, MEET[0]-6.8, MEET[1]);
-    glassWall(13.8,3.6,0.16, MEET[0], MEET[1]-6.3);
+    flat(13.0,12.0,0xdfdcd3,MEET[0],0.03,MEET[1]);
+    glassWall(0.16,3.6,12.2, MEET[0]-6.5, MEET[1]);
+    glassWall(13.2,3.6,0.16, MEET[0], MEET[1]-6.0);
     var top=new THREE.Mesh(new THREE.CylinderGeometry(2.4,2.4,0.16,36),
       new THREE.MeshLambertMaterial({color:C.walnut}));
     top.position.set(MEET[0],0.9,MEET[1]); top.castShadow=true; scene.add(top);
@@ -486,47 +571,44 @@ button.ghost{background:transparent}
       box(0.9,0.14,0.9,C.brass,MEET[0]+o[0],3.7,MEET[1]+o[1],false);
       box(0.04,1.5,0.04,C.charcoal,MEET[0]+o[0],4.5,MEET[1]+o[1],false);
     });
-    box(6.0,3.0,0.18,0x22262b,MEET[0],2.3,MEET[1]+6.2,false);
+    box(6.0,3.0,0.18,0x22262b,MEET[0],2.3,MEET[1]+5.9,false);
     var wbt=panel(5.4,2.4,textTex(["오늘의 의제","10월 첫째 주 운영 점검","미납 · 숙제표 · 겨울특강"],760,340,null,"#e9eef4",44,600));
-    wbt.position.set(MEET[0],2.3,MEET[1]+6.1); wbt.rotation.y=Math.PI; scene.add(wbt);
+    wbt.position.set(MEET[0],2.3,MEET[1]+5.8); wbt.rotation.y=Math.PI; scene.add(wbt);
     var ml=panel(3.4,0.6,textTex(["회의실 Meeting"],420,76,null,"#5b6068",40,600));
-    ml.position.set(MEET[0]-6.7,3.05,MEET[1]); ml.rotation.y=Math.PI/2; scene.add(ml);
+    ml.position.set(MEET[0]-6.4,3.05,MEET[1]); ml.rotation.y=Math.PI/2; scene.add(ml);
   }
 
-  /* AI 엔진 룸 — 엔진 하나가 랙 하나. 팀이 일하면 빛이 여기로 흘러온다. */
   function addEngineRoom(){
     var cx=ENGINE_ROOM[0], cz=ENGINE_ROOM[1];
-    flat(6.0,14.0,0x2a2e35,cx,0.03,cz);
-    glassWall(0.16,3.8,14.2, cx-3.0, cz);
-    glassWall(6.2,3.8,0.16, cx, cz-7.0);
-
-    var sign=panel(4.6,0.8,textTex(["AI 엔진 룸  ENGINE ROOM"],620,110,null,"#cfd6df",44,700));
-    sign.position.set(cx,3.3,cz-6.9); scene.add(sign);
+    flat(6.4,15.4,0x2a2e35,cx,0.03,cz);
+    glassWall(0.16,3.9,15.6, cx-3.2, cz);
+    glassWall(6.6,3.9,0.16, cx, cz-7.7);
+    var sign=panel(5.0,0.86,textTex(["AI 엔진 룸  ENGINE ROOM"],640,110,null,"#cfd6df",42,700));
+    sign.position.set(cx,3.4,cz-7.6); scene.add(sign);
 
     ENGINES.forEach(function(e,i){
-      var z=cz-5.2+i*2.6;
-      box(2.2,2.8,1.5,C.rack,cx+0.4,1.4,z,true);                  /* 랙 본체 */
-      box(2.26,0.1,1.56,e.hex,cx+0.4,2.86,z,false);               /* 상단 컬러 캡 */
-      for(var k=0;k<5;k++) box(1.9,0.07,0.06,e.hex,cx-0.5,0.55+k*0.5,z-0.78,false); /* 전면 LED */
-      var lab=panel(1.9,0.5,textTex([e.name],380,100,null,"#eef2f7",44,700));
-      lab.position.set(cx-0.71,2.35,z); lab.rotation.y=-Math.PI/2; scene.add(lab);
-      var lamp=new THREE.Mesh(new THREE.SphereGeometry(0.2,12,10),
+      var z=cz-6.0+i*3.0;
+      box(2.4,3.0,1.6,C.rack,cx+0.5,1.5,z,true);
+      box(2.46,0.1,1.66,e.hex,cx+0.5,3.06,z,false);
+      for(var k=0;k<6;k++) box(2.0,0.07,0.06,e.hex,cx-0.5,0.5+k*0.48,z-0.83,false);
+      var lab=panel(2.2,0.56,textTex([e.name],420,110,null,"#eef2f7",46,700));
+      lab.position.set(cx-0.72,2.5,z); lab.rotation.y=-Math.PI/2; scene.add(lab);
+      var lamp=new THREE.Mesh(new THREE.SphereGeometry(0.24,14,12),
         new THREE.MeshBasicMaterial({color:e.hex}));
-      lamp.position.set(cx-0.9,1.7,z); scene.add(lamp);
+      lamp.position.set(cx-1.0,1.8,z); scene.add(lamp);
       engLamp[e.id]=lamp;
-      engPos[e.id]=new THREE.Vector3(cx-0.9,1.7,z);
+      engPos[e.id]=new THREE.Vector3(cx-1.0,1.8,z);
     });
   }
 
-  /* 팀 자리 → 엔진 랙으로 흐르는 빛 */
   function buildPulses(){
-    AGENTS.forEach(function(a){
-      var to=engPos[a.engines[0]]; if(!to) return;
-      var m=new THREE.Mesh(new THREE.SphereGeometry(0.17,10,8),
-        new THREE.MeshBasicMaterial({color:ENG[a.engines[0]].hex}));
+    STAFF.forEach(function(s){
+      var to=engPos[s.eng]; if(!to) return;
+      var m=new THREE.Mesh(new THREE.SphereGeometry(0.24,12,10),
+        new THREE.MeshBasicMaterial({color:ENG[s.eng].hex}));
       m.visible=false; scene.add(m);
-      pulses.push({mesh:m, from:new THREE.Vector3(a.desk[0],1.3,a.desk[1]), to:to,
-                   agent:a.id, t:Math.random()});
+      pulses.push({mesh:m, from:new THREE.Vector3(s.desk[0],1.4,s.desk[1]), to:to,
+                   sid:s.id, t:Math.random()});
     });
   }
 
@@ -537,17 +619,12 @@ button.ghost{background:transparent}
     box(w<1?0.2:w+0.1, 0.12, d<1?0.2:d+0.1, C.charcoal, x, h, z, false);
     box(w<1?0.2:w+0.1, 0.12, d<1?0.2:d+0.1, C.charcoal, x, 0.06, z, false);
   }
-
   function addPlant(x,z){
     box(0.7,0.58,0.7,0xa9703f,x,0.29,z,true);
     var l=new THREE.Mesh(new THREE.SphereGeometry(0.7,14,12),
       new THREE.MeshLambertMaterial({color:0x4a7a3c}));
     l.position.set(x,1.3,z); l.scale.y=1.4; l.castShadow=true; scene.add(l);
-    var l2=new THREE.Mesh(new THREE.SphereGeometry(0.46,12,10),
-      new THREE.MeshLambertMaterial({color:0x5d9049}));
-    l2.position.set(x+0.34,0.96,z+0.18); l2.castShadow=true; scene.add(l2);
   }
-
   function addChair(x,z,color){
     box(0.9,0.14,0.9,color,x,0.48,z,true);
     box(0.9,0.9,0.14,color,x,0.95,z+0.42,true);
@@ -555,96 +632,85 @@ button.ghost{background:transparent}
     box(0.8,0.08,0.8,C.metal,x,0.05,z,false);
   }
 
-  function addZone(a){
-    var cx=a.zone[0], cz=a.zone[1], W=7.4, D=6.6;
-    flat(W,D,tint(a.hex),cx,0.03,cz);
-    box(W,0.05,0.14,a.hex,cx,0.05,cz+D/2-0.07,false);
+  function addZone(t){
+    var cx=t.zone[0], cz=t.zone[1], W=8.8, D=8.4;
+    flat(W,D,tint(t.hex),cx,0.03,cz);
+    box(W,0.05,0.14,t.hex,cx,0.05,cz+D/2-0.07,false);
 
     box(W,1.15,0.16,C.walnutDark,cx,0.58,cz-D/2,true);
     var gp=new THREE.Mesh(new THREE.BoxGeometry(W,0.85,0.1),
       new THREE.MeshLambertMaterial({color:C.glass,transparent:true,opacity:0.3}));
     gp.position.set(cx,1.58,cz-D/2); scene.add(gp);
-    box(W,0.08,0.2,a.hex,cx,2.03,cz-D/2,false);
+    box(W,0.08,0.2,t.hex,cx,2.03,cz-D/2,false);
     box(0.16,1.15,D,C.walnutDark,cx-W/2,0.58,cz,true);
     var gp2=new THREE.Mesh(new THREE.BoxGeometry(0.1,0.85,D),
       new THREE.MeshLambertMaterial({color:C.glass,transparent:true,opacity:0.3}));
     gp2.position.set(cx-W/2,1.58,cz); scene.add(gp2);
 
-    var sign=panel(3.2,1.23,textTex([a.team,a.en+" Team"],520,200,"#ffffff","#1d2126",64,700),true);
-    sign.position.set(cx+0.6,2.95,cz-D/2+0.02); scene.add(sign);
-    box(3.34,1.37,0.08,a.hex,cx+0.6,2.95,cz-D/2-0.04,false);
-    box(0.05,1.0,0.05,C.metal,cx-0.6,3.7,cz-D/2,false);
-    box(0.05,1.0,0.05,C.metal,cx+1.8,3.7,cz-D/2,false);
+    var sg=panel(3.6,1.38,textTex([t.name,t.en],560,215,"#ffffff","#1d2126",66,700),true);
+    sg.position.set(cx+0.4,3.05,cz-D/2+0.02); scene.add(sg);
+    box(3.74,1.52,0.08,t.hex,cx+0.4,3.05,cz-D/2-0.04,false);
+    box(0.05,1.0,0.05,C.metal,cx-0.9,3.85,cz-D/2,false);
+    box(0.05,1.0,0.05,C.metal,cx+1.7,3.85,cz-D/2,false);
 
-    /* 이 팀이 쓰는 엔진 색 점 — 사인 아래에 나란히 */
-    a.engines.forEach(function(eid,i){
-      box(0.26,0.26,0.08,ENG[eid].hex, cx-0.9+i*0.4, 2.18, cz-D/2+0.04, false);
-    });
+    box(5.4,0.12,1.0,0xfff4dc,cx,4.15,cz,false);
 
-    box(4.6,0.12,1.0,0xfff4dc,cx,4.05,cz,false);
-
-    addDesk(a, a.desk[0], a.desk[1], true);
-    addDesk(a, a.desk[0]+3.2, a.desk[1], false);
-    addChair(a.desk[0]+3.2, a.desk[1]+1.45, C.charcoal);
-
+    t.members.forEach(function(s){ addDesk(s); });
     box(1.8,1.05,0.55,C.walnut,cx-W/2+1.3,0.52,cz+D/2-0.5,true);
-    box(1.9,0.08,0.65,C.white,cx-W/2+1.3,1.08,cz+D/2-0.5,false);
     addPlant(cx+W/2-0.9, cz+D/2-0.9);
   }
 
-  function addDesk(a,x,z,lead){
+  function addDesk(s){
+    var x=s.desk[0], z=s.desk[1], t=TEAM[s.team];
     box(2.8,0.12,1.45,C.walnut,x,0.76,z,true);
     [[-1.26,-0.58],[1.26,-0.58],[-1.26,0.58],[1.26,0.58]].forEach(function(o){
       box(0.09,0.76,0.09,C.metal,x+o[0],0.38,z+o[1],false);
     });
     box(0.85,0.58,1.1,C.white,x+0.95,0.29,z,true);
-    var tOff=screenTex(a,false);
+    var tOff=screenTex(s,false);
     var scr=new THREE.Mesh(new THREE.BoxGeometry(1.36,0.82,0.07),
       new THREE.MeshBasicMaterial({map:tOff}));
     scr.position.set(x-0.15,1.33,z-0.48); scene.add(scr);
-    if(lead) monitors[a.id]={mesh:scr, off:tOff, on:screenTex(a,true), lit:false};
+    monitors[s.id]={mesh:scr, off:tOff, on:screenTex(s,true), lit:false};
     box(0.1,0.34,0.1,C.charcoal,x-0.15,1.0,z-0.48,false);
     box(0.56,0.05,0.36,C.charcoal,x-0.15,0.85,z-0.48,false);
-    if(lead){
-      var np=panel(1.05,0.3,textTex([a.name],420,120,"#ffffff","#1d2126",54,700),true);
-      np.position.set(x+0.9,0.94,z+0.74); scene.add(np);
-      box(1.1,0.34,0.05,a.hex,x+0.9,0.94,z+0.76,false);
-    }
+    /* 명패 — 이름 + 쓰는 AI 색 */
+    var np=panel(1.05,0.3,textTex([s.n],420,120,"#ffffff","#1d2126",58,700),true);
+    np.position.set(x+0.9,0.94,z+0.74); scene.add(np);
+    box(1.1,0.34,0.05,ENG[s.eng].hex,x+0.9,0.94,z+0.76,false);
     box(0.36,0.06,0.28,0xf2efe7,x-1.0,0.86,z+0.22,false);
     var cup=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.085,0.22,12),
-      new THREE.MeshLambertMaterial({color:lead?a.hex:0xcfd3d8}));
+      new THREE.MeshLambertMaterial({color:s.lead?t.hex:0xcfd3d8}));
     cup.position.set(x+0.42,0.95,z+0.28); cup.castShadow=true; scene.add(cup);
-    if(lead) addChair(x, z+1.45, C.charcoal);
+    addChair(x, z+1.35, C.charcoal);
   }
 
-  function screenTex(a,on){
+  function screenTex(s,on){
     var c=document.createElement("canvas"); c.width=280; c.height=168;
-    var g=c.getContext("2d");
+    var g=c.getContext("2d"), e=ENG[s.eng];
     if(!on){ g.fillStyle="#2a2f36"; g.fillRect(0,0,280,168);
              g.fillStyle="#333941"; g.fillRect(0,0,280,20); }
     else{
       g.fillStyle="#12171d"; g.fillRect(0,0,280,168);
-      g.fillStyle=a.css; g.fillRect(0,0,280,24);
+      g.fillStyle=e.css; g.fillRect(0,0,280,24);
       g.fillStyle="#ffffff"; g.font="600 13px 'IBM Plex Sans KR',sans-serif";
-      g.textBaseline="middle"; g.fillText("  "+a.team,4,12);
+      g.textBaseline="middle"; g.fillText("  "+s.n+" · "+e.name,4,12);
       g.fillStyle="#38434f";
-      for(var i=0;i<7;i++) g.fillRect(14,40+i*17,180-(i%3)*48,7);
-      /* 그 팀이 부리는 엔진 색을 화면 오른쪽에 띄운다 */
-      a.engines.forEach(function(eid,j){
-        g.fillStyle=ENG[eid].css; g.fillRect(210,42+j*30,52,18);
-      });
+      for(var i=0;i<7;i++) g.fillRect(14,40+i*17,190-(i%3)*52,7);
+      g.fillStyle=e.css;
+      for(var j=0;j<3;j++) g.fillRect(214,42+j*30,50,18);
     }
     var t=new THREE.CanvasTexture(c); t.needsUpdate=true; return t;
   }
 
-  function addBody(a){
-    var g=new THREE.Group();
-    var mat=new THREE.MeshLambertMaterial({color:a.hex});
+  function addBody(s){
+    var t=TEAM[s.team], g=new THREE.Group();
+    var mat=new THREE.MeshLambertMaterial({color:t.hex});
     var dark=new THREE.MeshLambertMaterial({color:0x353b45});
     var torso=new THREE.Mesh(new THREE.CylinderGeometry(0.32,0.40,0.80,16),mat);
     torso.position.y=0.92; torso.castShadow=true; g.add(torso);
     var collar=new THREE.Mesh(new THREE.CylinderGeometry(0.33,0.33,0.09,16),
-      new THREE.MeshLambertMaterial({color:0xf6f5f1}));
+      new THREE.MeshLambertMaterial({color:ENG[s.eng].hex}));   /* 깃 색 = 쓰는 AI */
     collar.position.y=1.32; g.add(collar);
     var hip=new THREE.Mesh(new THREE.CylinderGeometry(0.40,0.34,0.52,16),dark);
     hip.position.y=0.28; hip.castShadow=true; g.add(hip);
@@ -658,19 +724,17 @@ button.ghost{background:transparent}
     armR.position.set(0.42,0.95,0); armR.castShadow=true; g.add(armR);
     var armL=new THREE.Mesh(new THREE.CylinderGeometry(0.085,0.085,0.66,10),mat);
     armL.position.set(-0.42,0.95,0); armL.castShadow=true; g.add(armL);
-    var hit=new THREE.Mesh(new THREE.CylinderGeometry(0.65,0.65,2.1,8),
+    var hit=new THREE.Mesh(new THREE.CylinderGeometry(0.62,0.62,2.1,8),
       new THREE.MeshBasicMaterial({visible:false}));
-    hit.position.y=1.05; hit.userData.agent=a.id; g.add(hit); pickables.push(hit);
-
-    g.position.set(a.seat[0],0,a.seat[1]);
-    scene.add(g);
-    bodies[a.id]={group:g, arm:armR, torso:torso, head:head,
-                  target:new THREE.Vector3(a.seat[0],0,a.seat[1])};
+    hit.position.y=1.05; hit.userData.sid=s.id; g.add(hit); pickables.push(hit);
+    g.position.set(s.seat[0],0,s.seat[1]); scene.add(g);
+    bodies[s.id]={group:g, arm:armR, torso:torso, head:head,
+                  target:new THREE.Vector3(s.seat[0],0,s.seat[1])};
   }
 
   function resize(){
     if(!renderer) return;
-    var w=canvas.clientWidth||900, h=canvas.clientHeight||520;
+    var w=canvas.clientWidth||960, h=canvas.clientHeight||552;
     renderer.setSize(w,h,false);
     camera.aspect=w/h; camera.updateProjectionMatrix();
   }
@@ -682,37 +746,34 @@ button.ghost{background:transparent}
     if(!renderer) return;
     var t=(Date.now()-t0)/1000;
     var horiz=dist*Math.cos(pitch);
-    camera.position.set(Math.sin(yaw)*horiz+3, Math.max(5,dist*Math.sin(pitch)), Math.cos(yaw)*horiz+4);
-    camera.lookAt(0.5,1.2,-1.5);
+    camera.position.set(Math.sin(yaw)*horiz+3, Math.max(6,dist*Math.sin(pitch)), Math.cos(yaw)*horiz+5);
+    camera.lookAt(1.0,1.2,-3.0);
 
     var busy={};
-    AGENTS.forEach(function(a){
-      var b=bodies[a.id]; if(!b) return;
+    STAFF.forEach(function(s){
+      var b=bodies[s.id]; if(!b) return;
       b.group.position.lerp(b.target,0.05);
-      var speaking=(mode==="meeting" && speakIdx>=0 && SCRIPT[speakIdx] && SCRIPT[speakIdx].who===a.id);
+      var speaking=(mode==="meeting" && speakIdx>=0 && SCRIPT[speakIdx] && SCRIPT[speakIdx].who===s.id);
       b.arm.rotation.z += ((speaking?-2.2:0)-b.arm.rotation.z)*0.13;
-      var bob=(a.state==="working"&&!reduce)?Math.sin(t*6.5+a.zone[0])*0.03:0;
+      var bob=(s.state==="working"&&!reduce)?Math.sin(t*6.5+s.desk[0])*0.03:0;
       b.torso.position.y=0.92+bob; b.head.position.y=1.62+bob;
-      var m=monitors[a.id], want=(a.state==="working");
+      var m=monitors[s.id], want=(s.state==="working");
       if(m && m.lit!==want){ m.lit=want; m.mesh.material.map=want?m.on:m.off; m.mesh.material.needsUpdate=true; }
-      if(want) a.engines.forEach(function(e){ busy[e]=true; });
+      if(want) busy[s.eng]=(busy[s.eng]||0)+1;
     });
 
-    /* 엔진 램프 — 그 엔진을 쓰는 팀이 일하는 중이면 밝게 뛴다 */
     ENGINES.forEach(function(e){
       var l=engLamp[e.id]; if(!l) return;
-      var s=busy[e.id]?(1.0+(reduce?0:Math.sin(t*5)*0.35)):0.55;
-      l.scale.set(s,s,s);
+      var sc=busy[e.id]?(1.1+(reduce?0:Math.sin(t*5)*0.4)):0.5;
+      l.scale.set(sc,sc,sc);
     });
 
-    /* 팀 → 엔진으로 흐르는 빛 */
     pulses.forEach(function(p){
-      var on=(BY[p.agent].state==="working");
-      p.mesh.visible=on;
-      if(!on) return;
-      p.t=(p.t+(reduce?0.004:0.010))%1;
+      var on=(SBY[p.sid].state==="working");
+      p.mesh.visible=on; if(!on) return;
+      p.t=(p.t+(reduce?0.004:0.011))%1;
       p.mesh.position.lerpVectors(p.from,p.to,p.t);
-      p.mesh.position.y=p.from.y+(p.to.y-p.from.y)*p.t+Math.sin(p.t*Math.PI)*1.6;
+      p.mesh.position.y=p.from.y+(p.to.y-p.from.y)*p.t+Math.sin(p.t*Math.PI)*2.2;
     });
 
     renderer.render(scene,camera);
@@ -723,16 +784,15 @@ button.ghost{background:transparent}
   function drawOverlay(){
     if(!renderer) return;
     var w=canvas.clientWidth, h=canvas.clientHeight, html="";
-    AGENTS.forEach(function(a){
-      var b=bodies[a.id]; if(!b) return;
+    STAFF.forEach(function(s){
+      var b=bodies[s.id]; if(!b) return;
       var v=new THREE.Vector3(b.group.position.x,2.15,b.group.position.z).project(camera);
       if(v.z>1) return;
       var px=(v.x*0.5+0.5)*w, py=(-v.y*0.5+0.5)*h;
-      html+='<div class="nametag'+(a.state!=="idle"?" on":"")+'" style="left:'+px.toFixed(0)+'px;top:'+py.toFixed(0)+'px">'
-           +a.name+'<em>'+a.en+'</em></div>';
-      if(mode==="meeting" && speakIdx>=0 && SCRIPT[speakIdx] && SCRIPT[speakIdx].who===a.id){
+      html+='<div class="nametag'+(s.state!=="idle"?" on":"")+'" style="left:'+px.toFixed(0)+'px;top:'+py.toFixed(0)+'px">'+s.n+'</div>';
+      if(mode==="meeting" && speakIdx>=0 && SCRIPT[speakIdx] && SCRIPT[speakIdx].who===s.id){
         html+='<div class="bubble" style="left:'+px.toFixed(0)+'px;top:'+(py-16).toFixed(0)+'px">'
-             +'<b>'+a.name+' '+a.en+'</b>'+esc(SCRIPT[speakIdx].say)+'</div>';
+             +'<b>'+s.n+' · '+TEAM[s.team].name+'</b>'+esc(SCRIPT[speakIdx].say)+'</div>';
       }
     });
     overlay.innerHTML=html;
@@ -740,7 +800,7 @@ button.ghost{background:transparent}
   function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){
     return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]; }); }
 
-  /* ═══════ 카메라 조작 ═══════ */
+  /* ═══════ 카메라 ═══════ */
   canvas.addEventListener("pointerdown",function(e){
     dragging=true; moved=0; lastX=e.clientX; lastY=e.clientY;
     canvas.classList.add("dragging");
@@ -750,8 +810,7 @@ button.ghost{background:transparent}
     if(!dragging) return;
     var dx=e.clientX-lastX, dy=e.clientY-lastY;
     moved+=Math.abs(dx)+Math.abs(dy);
-    yaw-=dx*0.006;
-    pitch=Math.max(0.28,Math.min(1.25,pitch+dy*0.004));
+    yaw-=dx*0.006; pitch=Math.max(0.26,Math.min(1.25,pitch+dy*0.004));
     lastX=e.clientX; lastY=e.clientY;
   });
   canvas.addEventListener("pointerup",function(e){
@@ -759,8 +818,7 @@ button.ghost{background:transparent}
     if(moved<6) pick(e);
   });
   canvas.addEventListener("wheel",function(e){
-    e.preventDefault();
-    dist=Math.max(20,Math.min(58,dist+(e.deltaY>0?1.8:-1.8)));
+    e.preventDefault(); dist=Math.max(24,Math.min(72,dist+(e.deltaY>0?2:-2)));
   },{passive:false});
 
   function pick(e){
@@ -771,79 +829,75 @@ button.ghost{background:transparent}
     pointer.y=-((e.clientY-r.top)/r.height)*2+1;
     ray.setFromCamera(pointer,camera);
     var hits=ray.intersectObjects(pickables,false);
-    if(hits.length) select(hits[0].object.userData.agent);
+    if(hits.length){ selected=hits[0].object.userData.sid; renderStaff(); }
   }
 
-  /* ═══════ 화면 그리기 ═══════ */
-  var selected="kyomu";
-  function select(id){ selected=id; renderStaff(); renderDetail(); }
+  /* ═══════ 패널 ═══════ */
+  function renderEngines(){
+    var busy=0;
+    document.getElementById("engines").innerHTML=ENGINES.map(function(e){
+      var mine=STAFF.filter(function(s){return s.eng===e.id;});
+      var working=mine.filter(function(s){return s.state==="working";});
+      if(working.length) busy++;
+      var jobs=working.length
+        ? working.map(function(s){
+            return '<li style="color:'+e.css+'"><b>'+s.n+'</b> <span style="color:var(--ink-2)">'+esc(s.task)+'</span></li>'; }).join("")
+        : '<li class="none">대기 — '+mine.map(function(s){return s.n;}).join(", ")+'</li>';
+      return '<div class="eng-row"><div class="eng-top">'
+        +'<span class="eng-dot" style="background:'+e.css+(working.length?';box-shadow:0 0 0 3px '+e.css+'44':'')+'"></span>'
+        +'<span class="eng-name">'+e.name+'</span><span class="eng-role">'+e.role+'</span>'
+        +'<span class="eng-st'+(working.length?' busy':'')+'">'
+        +(working.length?(working.length+"건 처리 중"):(e.live?"연결됨 · 대기":"편성 · 대기"))+'</span>'
+        +'</div><ul class="eng-jobs">'+jobs+'</ul></div>';
+    }).join("");
+    document.getElementById("engSub").textContent=busy?(busy+"개 엔진 가동 중"):"전부 대기";
+  }
 
   function renderStaff(){
-    var idle=AGENTS.filter(function(a){return a.state==="idle";}).length;
-    document.getElementById("headcount").textContent="5팀 · 대기 "+idle;
-    document.getElementById("staff").innerHTML=AGENTS.map(function(a){
-      var p=a.state==="working"?'<span class="pill work">근무</span>'
-           :a.state==="meeting"?'<span class="pill meet">회의</span>'
-           :'<span class="pill idle">대기</span>';
-      var n=tasks.filter(function(t){return t.owner===a.id&&t.state!=="done";}).length;
-      var dots=a.engines.map(function(eid){
-        return '<i style="display:inline-block;width:7px;height:7px;border-radius:2px;background:'
-          +ENG[eid].css+';margin-right:3px"></i>'; }).join("");
-      return '<button class="staff-row" data-agent="'+a.id+'" aria-pressed="'+(a.id===selected)+'">'
-        +'<span class="swatch" style="background:'+a.css+'"></span>'
-        +'<span><span class="staff-name">'+a.name+'<em>'+a.en+'</em></span>'
-        +'<span class="staff-role">'+dots+a.team+' · '+(a.task?esc(a.task):(n?("업무 "+n+"건"):"배정 없음"))+'</span></span>'
-        +p+'</button>';
+    var n=STAFF.filter(function(s){return s.state==="working";}).length;
+    document.getElementById("headcount").textContent="12명 · 근무 "+n;
+    document.getElementById("staff").innerHTML=TEAMS.map(function(t){
+      return t.members.map(function(s){
+        var p=s.state==="working"?'<span class="pill work">근무</span>'
+             :s.state==="meeting"?'<span class="pill meet">회의</span>'
+             :'<span class="pill idle">대기</span>';
+        var mine=tasks.filter(function(x){return x.owner===s.id&&x.state!=="done";}).length;
+        return '<button class="staff-row" data-sid="'+s.id+'" aria-pressed="'+(s.id===selected)+'">'
+          +'<span class="swatch" style="background:'+ENG[s.eng].css+'"></span>'
+          +'<span><span class="staff-name">'+s.n+(s.lead?'<span class="lead">팀장</span>':"")+'</span>'
+          +'<span class="staff-sub">'+t.name+' · '+ENG[s.eng].name+' · '
+          +(s.task?esc(s.task):(mine?("대기 업무 "+mine+"건"):s.role))+'</span></span>'
+          +p+'</button>';
+      }).join("");
     }).join("");
   }
 
-  function renderDetail(){
-    var a=BY[selected];
-    var mine=tasks.filter(function(t){return t.owner===a.id&&t.state!=="done";}).length;
-    document.getElementById("detail").innerHTML=
-      '<h3>'+a.team+'<em>'+a.en+' Team</em></h3><div class="who">'+a.name+' · '+a.scope+'</div>'
-      +'<dl class="kv">'
-      +'<dt>AI 엔진</dt><dd><span class="chips">'+a.engines.map(function(eid){
-          return '<span class="chip eng" style="color:'+ENG[eid].css+';border-color:'+ENG[eid].css+'">'
-            +ENG[eid].name+'</span>'; }).join("")+'</span></dd>'
-      +'<dt>담당 파트</dt><dd>'+a.parts.join(" · ")+'</dd>'
-      +'<dt>결과물</dt><dd>'+a.center+'</dd>'
-      +'<dt>도구</dt><dd><span class="chips">'+a.tools.map(function(t){return '<span class="chip">'+t+'</span>';}).join("")+'</span></dd>'
-      +'<dt>맡은 일</dt><dd>'+(a.task?esc(a.task):(mine?(mine+"건 대기"):"없음"))+'</dd>'
-      +'</dl>';
+  /* ═══════ 업무판 ═══════ */
+  function matches(t){
+    if(catFilter!=="all" && t.cat!==catFilter) return false;
+    if(!query) return true;
+    var s=SBY[t.owner], hay=(t.title+" "+(s?s.n+" "+s.role:"")+" "+TEAM[t.team].name+" "
+      +(CATBY[t.cat]||CATBY.etc).name+" "+(s?ENG[s.eng].name:"")).toLowerCase().replace(/\s+/g,"");
+    return query.toLowerCase().replace(/\s+/g,"").split("").length
+      ? query.toLowerCase().split(/\s+/).filter(Boolean)
+          .every(function(w){ return hay.indexOf(w.replace(/\s+/g,""))>=0; })
+      : true;
   }
-
-  function renderEngines(){
-    var busy={};
-    AGENTS.forEach(function(a){ if(a.state==="working") a.engines.forEach(function(e){ busy[e]=true; }); });
-    document.getElementById("engines").innerHTML=ENGINES.map(function(e){
-      var teams=AGENTS.filter(function(a){return a.engines.indexOf(e.id)>=0;})
-                      .map(function(a){return a.team;}).join(" · ");
-      var st=e.live?'<span class="eng-st on">연결됨</span>':'<span class="eng-st">편성</span>';
-      return '<div class="eng-row">'
-        +'<span class="eng-dot" style="background:'+e.css+(busy[e.id]?';box-shadow:0 0 0 3px '+e.css+'44':'')+'"></span>'
-        +'<span><span class="eng-name">'+e.name+'</span>'
-        +'<span class="eng-sub">'+e.role+' · '+(teams||"—")+'</span></span>'
-        +st+'</div>';
-    }).join("");
-  }
+  function visible(){ return tasks.filter(matches); }
 
   function taskCard(t,withStatus){
-    var a=BY[t.owner]||BY.biseo, c=CATBY[t.cat]||CATBY.etc;
-    var acts='<button data-seat="'+t.id+'">'+(t.state==="doing"?"자리로":"착석시키기")+'</button>';
-    if(t.url) acts+='<a href="'+esc(t.url)+'" target="_blank" rel="noopener">노션에서 열기</a>';
-    else if(t.demo) acts+='<button data-adv="'+t.id+'">'+(t.state==="done"?"되돌리기":"다음 단계")+'</button>';
+    var s=SBY[t.owner], c=CATBY[t.cat]||CATBY.etc, tm=TEAM[t.team];
+    var now=(s && s.state==="working" && s.task===t.title);
+    var acts='<button data-seat="'+t.id+'">'+(now?"멈추기":"일 시작")+'</button>'
+            +'<button data-memo="'+t.id+'">지시</button>';
+    if(t.url) acts+='<a href="'+esc(t.url)+'" target="_blank" rel="noopener">노션</a>';
     var stLabel={todo:"할 일",doing:"진행",done:"완료"}[t.state];
-    return '<div class="task" style="border-left-color:'+a.css+'">'
+    return '<div class="task'+(now?" now":"")+'" style="border-left-color:'+(s?ENG[s.eng].css:tm.css)+'">'
       +(withStatus?'<span class="st '+t.state+'">'+stLabel+'</span>':"")
       +'<span class="t">'+esc(t.title)+'</span>'
-      +'<span class="m">'+a.team+(withStatus?"":(" · "+c.name))
-        +(t.due?(" · 기한 "+esc(t.due)):"")+'</span>'
+      +'<span class="m">'+(s?s.n+" · "+ENG[s.eng].name:"미배정")+' · '+tm.name
+        +(withStatus?"":(" · "+c.name))+(t.due?(" · 기한 "+esc(t.due)):"")+'</span>'
       +'<span class="acts">'+acts+'</span></div>';
-  }
-
-  function visible(){
-    return catFilter==="all" ? tasks : tasks.filter(function(t){ return t.cat===catFilter; });
   }
 
   function renderCatBar(){
@@ -852,112 +906,134 @@ button.ghost{background:transparent}
     CATS.forEach(function(c){
       var n=counts[c.id]||0; if(!n) return;
       html+='<button class="catchip" data-cat="'+c.id+'" aria-pressed="'+(catFilter===c.id)+'"'
-         +' style="'+(catFilter===c.id?"":"border-left:3px solid "+c.css)+'">'+c.name+' <b>'+n+'</b></button>';
+        +' style="'+(catFilter===c.id?"":"border-left:3px solid "+c.css)+'">'+c.name+' <b>'+n+'</b></button>';
     });
-    html+='<span class="modesw">'
-       +'<button data-mode="cat" aria-pressed="'+(groupMode==="cat")+'">카테고리별</button>'
-       +'<button data-mode="status" aria-pressed="'+(groupMode==="status")+'">상태별</button></span>';
     document.getElementById("catbar").innerHTML=html;
   }
 
   function renderBoard(){
     var list=visible(), box=document.getElementById("board");
+    document.getElementById("qhit").textContent=(query||catFilter!=="all")?(list.length+"건"):"";
     if(groupMode==="status"){
-      var cols=[["todo","할 일"],["doing","진행 중"],["done","완료"]];
       box.className="board";
-      box.innerHTML=cols.map(function(c){
+      box.innerHTML=[["todo","할 일"],["doing","진행 중"],["done","완료"]].map(function(c){
         var items=list.filter(function(t){return t.state===c[0];});
-        var inner=items.length?items.slice(0,14).map(function(t){return taskCard(t,false);}).join("")
+        var inner=items.length?items.slice(0,16).map(function(t){return taskCard(t,false);}).join("")
                              :'<div class="empty">비어 있음</div>';
-        var more=items.length>14?'<div class="empty">외 '+(items.length-14)+'건</div>':"";
+        var more=items.length>16?'<div class="empty">외 '+(items.length-16)+'건</div>':"";
         return '<div class="col"><h4>'+c[1]+'<span>'+items.length+'</span></h4>'+inner+more+'</div>';
       }).join("");
       return;
     }
     box.className="";
-    var out="";
-    CATS.forEach(function(c){
-      var items=list.filter(function(t){return t.cat===c.id;});
-      if(!items.length) return;
-      var nt=items.filter(function(t){return t.state==="todo";}).length;
-      var nd=items.filter(function(t){return t.state==="doing";}).length;
-      var nf=items.filter(function(t){return t.state==="done";}).length;
-      var tot=items.length;
+    var out="", groups;
+    if(groupMode==="staff"){
+      groups=STAFF.map(function(s){
+        return {key:s.id, name:s.n+" · "+TEAM[s.team].name, css:ENG[s.eng].css,
+                sub:ENG[s.eng].name+" · "+s.role,
+                items:list.filter(function(t){return t.owner===s.id;})};
+      });
+    }else{
+      groups=CATS.map(function(c){
+        return {key:c.id, name:c.name, css:c.css, sub:"",
+                items:list.filter(function(t){return t.cat===c.id;})};
+      });
+    }
+    groups.forEach(function(g){
+      if(!g.items.length) return;
+      var nt=g.items.filter(function(t){return t.state==="todo";}).length;
+      var nd=g.items.filter(function(t){return t.state==="doing";}).length;
+      var nf=g.items.filter(function(t){return t.state==="done";}).length;
+      var tot=g.items.length;
       out+='<div class="catsec"><h4>'
-        +'<span style="width:9px;height:16px;border-radius:2px;background:'+c.css+';display:inline-block"></span>'
-        +c.name
+        +'<span style="width:9px;height:16px;border-radius:2px;background:'+g.css+';display:inline-block"></span>'
+        +g.name+(g.sub?' <em style="font-weight:400">'+g.sub+'</em>':"")
         +'<span class="bar-mini">'
-          +'<i style="width:'+(nt/tot*100)+'%;background:'+c.css+'33"></i>'
-          +'<i style="width:'+(nd/tot*100)+'%;background:'+c.css+'"></i>'
-          +'<i style="width:'+(nf/tot*100)+'%;background:'+c.css+'66"></i>'
-        +'</span>'
+          +'<i style="width:'+(nt/tot*100)+'%;background:'+g.css+'33"></i>'
+          +'<i style="width:'+(nd/tot*100)+'%;background:'+g.css+'"></i>'
+          +'<i style="width:'+(nf/tot*100)+'%;background:'+g.css+'66"></i></span>'
         +'<em>할 일 '+nt+' · 진행 '+nd+' · 완료 '+nf+'</em></h4>'
-        +'<div class="catgrid">'+items.slice(0,12).map(function(t){return taskCard(t,true);}).join("")+'</div>'
-        +(items.length>12?'<div class="empty" style="margin-top:7px">외 '+(items.length-12)+'건</div>':"")
+        +'<div class="catgrid">'+g.items.slice(0,12).map(function(t){return taskCard(t,true);}).join("")+'</div>'
+        +(g.items.length>12?'<div class="empty" style="margin-top:7px">외 '+(g.items.length-12)+'건</div>':"")
         +'</div>';
     });
-    box.innerHTML=out||'<div class="catsec"><div class="empty">이 카테고리에는 업무가 없습니다.</div></div>';
+    box.innerHTML=out||'<div class="catsec"><div class="empty">찾으시는 업무가 없습니다.</div></div>';
   }
 
   function renderLog(){
     document.getElementById("logcount").textContent=minutes.length+"건";
     document.getElementById("log").innerHTML=minutes.length
-      ? minutes.map(function(m){
-          return '<p class="'+(m.act?"act":"")+'"><b>'+esc(m.head)+'</b>'+esc(m.body)+'</p>';
-        }).join("")
-      : '<p style="border:0;padding:0;color:var(--ink-3)">아직 기록이 없습니다. 회의를 소집하거나 업무 카드를 눌러 보세요.</p>';
+      ? minutes.slice(-60).map(function(m){
+          return '<p class="'+(m.act?"act":"")+'"><b>'+esc(m.head)+'</b>'+esc(m.body)+'</p>'; }).join("")
+      : '<p style="border:0;padding:0;color:var(--ink-3)">아직 기록이 없습니다. 「자동 운영 켜기」를 눌러 보세요.</p>';
     var el=document.getElementById("log"); el.scrollTop=el.scrollHeight;
   }
-
   function log(head,body,act){ minutes.push({head:stamp()+" · "+head, body:body, act:!!act}); renderLog(); }
-  function stamp(){ var h=Math.floor(clockMin/60), m=clockMin%60;
+  function stamp(){ var h=Math.floor(clockMin/60)%24, m=clockMin%60;
     return (h<10?"0":"")+h+":"+(m<10?"0":"")+m; }
-  function tick(n){ clockMin=Math.min(1320,clockMin+n);
-    document.getElementById("clock").textContent=stamp(); }
+  function tick(n){ clockMin+=n; document.getElementById("clock").textContent=stamp(); }
 
-  /* ═══════ 동작 ═══════ */
-  function sitAt(a,x,z){ if(bodies[a.id]) bodies[a.id].target.set(x,0,z); }
-  function toDesk(a){ sitAt(a,a.seat[0],a.seat[1]); }
+  /* ═══════ 일 시작·끝 ═══════ */
+  function sitAt(s,x,z){ if(bodies[s.id]) bodies[s.id].target.set(x,0,z); }
+  function toDesk(s){ sitAt(s,s.seat[0],s.seat[1]); }
 
-  function seat(id){
+  function startTask(s,t){
+    s.state="working"; s.task=t.title; s.since=Date.now(); t.state="doing"; toDesk(s);
+    log(s.n+" 시작","「"+t.title+"」 · "+(CATBY[t.cat]||CATBY.etc).name+" · "+ENG[s.eng].name+" 호출",true);
+    tick(5);
+  }
+  function finishTask(s){
+    var t=tasks.filter(function(x){return x.owner===s.id&&x.title===s.task;})[0];
+    if(t) t.state="done";
+    log(s.n+" 완료","「"+s.task+"」 끝 → "+TEAM[s.team].center+"에 저장");
+    s.state="idle"; s.task=null; tick(10);
+  }
+  function toggleTask(id){
     var t=tasks.filter(function(x){return x.id===id;})[0]; if(!t) return;
-    if(mode==="meeting"){ log("배정 보류","회의 중입니다. 회의를 마친 뒤 배정하세요."); return; }
-    var a=BY[t.owner]||BY.biseo;
-    if(t.state==="doing" && a.task===t.title){
-      a.state="idle"; a.task=null; if(!t.url) t.state="todo";
-      log(a.name+" 대기","「"+t.title+"」에서 손을 뗐습니다.");
-    }else{
-      if(!t.url) t.state="doing";
-      a.state="working"; a.task=t.title; toDesk(a);
-      log(a.name+" 착석","「"+t.title+"」 시작 · "+(CATBY[t.cat]||CATBY.etc).name
-        +" · 엔진 "+a.engines.map(function(e){return ENG[e].name;}).join("+"),true);
-      tick(15);
-    }
+    if(mode==="meeting"){ log("보류","회의 중입니다."); return; }
+    var s=SBY[t.owner]; if(!s) return;
+    if(s.state==="working" && s.task===t.title){ finishTask(s); }
+    else if(s.state==="working"){ log("바쁨",s.n+"은(는) 「"+s.task+"」 중입니다."); }
+    else { startTask(s,t); }
     refresh();
   }
 
-  function advance(id){
-    var t=tasks.filter(function(x){return x.id===id;})[0]; if(!t||t.url) return;
-    var a=BY[t.owner]||BY.biseo;
-    if(t.state==="todo"){ seat(id); return; }
-    if(t.state==="doing"){
-      t.state="done";
-      if(a.task===t.title){ a.task=null; if(mode!=="meeting") a.state="idle"; }
-      log(a.name+" 완료","「"+t.title+"」 끝. "+a.center+"에 저장했습니다.",true); tick(25);
-    }else{ t.state="todo"; log("되돌림","「"+t.title+"」을 할 일로 옮겼습니다."); }
-    refresh();
+  function setAuto(on){
+    auto=on;
+    var b=document.getElementById("btnAuto");
+    b.setAttribute("aria-pressed",String(on));
+    b.textContent=on?"■ 자동 운영 끄기":"▶ 자동 운영 켜기";
+    if(autoTimer){ clearInterval(autoTimer); autoTimer=null; }
+    if(on){
+      log("자동 운영 시작","직원들이 자기 업무를 순서대로 잡습니다. 노션은 바뀌지 않습니다.",true);
+      autoTimer=setInterval(autoTick,2200);
+      autoTick();
+    }else{ log("자동 운영 정지","진행 중이던 일은 그대로 둡니다."); }
+  }
+  function autoTick(){
+    if(mode==="meeting") return;
+    var now=Date.now(), moved=false;
+    STAFF.forEach(function(s){
+      if(s.state==="working" && now-s.since>9000+Math.random()*6000){ finishTask(s); moved=true; }
+    });
+    STAFF.forEach(function(s){
+      if(s.state!=="idle") return;
+      var t=tasks.filter(function(x){return x.owner===s.id&&x.state==="todo";})[0];
+      if(t){ startTask(s,t); moved=true; }
+    });
+    if(moved) refresh(); else { renderEngines(); }
   }
 
+  /* ═══════ 회의 ═══════ */
   function startMeeting(){
     mode="meeting"; speakIdx=-1;
-    AGENTS.forEach(function(a,i){ a.state="meeting"; sitAt(a,MEET_SEATS[i][0],MEET_SEATS[i][1]); });
-    log("회의 소집", AGENDA+". 5개 팀 팀장 전원 회의실 착석. 발언권은 비서팀장이 돌립니다.", true);
+    LEADS.forEach(function(s,i){ s.state="meeting"; sitAt(s,MEET_SEATS[i][0],MEET_SEATS[i][1]); });
+    log("회의 소집", AGENDA+". 팀장 5명 회의실 착석. 팀원들은 자리에서 계속 일합니다.", true);
     document.getElementById("btnMeet").disabled=true;
     document.getElementById("btnNext").disabled=false;
     document.getElementById("btnEnd").disabled=false;
     tick(5); refresh(); nextSpeaker();
   }
-
   function nextSpeaker(){
     if(mode!=="meeting") return;
     speakIdx++;
@@ -966,43 +1042,109 @@ button.ghost{background:transparent}
       document.getElementById("btnNext").disabled=true;
       log("발언 종료","「회의 종료」를 누르면 결정 사항이 업무 카드로 만들어집니다."); return;
     }
-    log(BY[SCRIPT[speakIdx].who].name+" 발언", SCRIPT[speakIdx].say); tick(3);
+    log(SBY[SCRIPT[speakIdx].who].n+" 발언", SCRIPT[speakIdx].say); tick(3);
     if(speakIdx===SCRIPT.length-1) document.getElementById("btnNext").disabled=true;
   }
-
   function endMeeting(){
     mode="idle"; speakIdx=-1;
-    var added=0;
+    var added=[];
     OUTCOME.forEach(function(o,i){
-      if(tasks.some(function(t){return t.title===o.title;})) return;
-      tasks.unshift({id:"m"+Date.now()+i, title:o.title, owner:o.owner, tag:o.tag,
-                     state:"todo", url:null, demo:true, cat:classify(o.title,null)}); added++;
+      if(tasks.some(function(t){return t.title===o.t;})) return;
+      added.push({id:"m"+Date.now()+i, title:o.t, team:o.team, owner:null, due:null,
+                  state:"todo", url:null, demo:true, cat:classify(o.t,null)});
     });
-    AGENTS.forEach(function(a){ a.state=a.task?"working":"idle"; toDesk(a); });
+    if(added.length){ assignOwners(added); tasks=added.concat(tasks); }
+    LEADS.forEach(function(s){ s.state=s.task?"working":"idle"; toDesk(s); });
     document.getElementById("btnMeet").disabled=false;
     document.getElementById("btnNext").disabled=true;
     document.getElementById("btnEnd").disabled=true;
-    log("회의 종료", added>0
-      ? "결정 사항 "+added+"건을 업무 카드로 만들어 배정했습니다. 전원 자기 구획으로 복귀."
-        +(notionLive?" (이 카드는 화면에만 있습니다 — 노션 기록은 다음 단계)":"")
-      : "새로 만들 카드가 없습니다. 전원 자기 구획으로 복귀.", true);
+    log("회의 종료", added.length
+      ? "결정 "+added.length+"건을 카드로 만들어 담당자에게 배정했습니다. 전원 복귀."
+        +(notionLive?" (화면에만 있습니다 — 노션 기록은 다음 단계)":"")
+      : "새로 만들 카드가 없습니다. 전원 복귀.", true);
     tick(10); refresh();
   }
 
   function reset(){
-    mode="idle"; speakIdx=-1; minutes=[]; clockMin=540; catFilter="all";
-    tasks=notionRows?mapRows(notionRows):seedCopy();
-    AGENTS.forEach(function(a){ a.state="idle"; a.task=null; toDesk(a); });
+    setAuto(false);
+    mode="idle"; speakIdx=-1; minutes=[]; clockMin=540; catFilter="all"; query="";
+    document.getElementById("q").value="";
+    tasks=assignOwners(notionRows?mapRows(notionRows):seedCopy());
+    STAFF.forEach(function(s){ s.state="idle"; s.task=null; toDesk(s); });
     document.getElementById("btnMeet").disabled=false;
     document.getElementById("btnNext").disabled=true;
     document.getElementById("btnEnd").disabled=true;
     document.getElementById("clock").textContent=stamp();
     refresh();
   }
+  function refresh(){ renderEngines(); renderStaff(); renderCatBar(); renderBoard(); renderLog(); }
 
-  function refresh(){ renderStaff(); renderDetail(); renderEngines(); renderCatBar(); renderBoard(); renderLog(); }
+  /* ═══════ 지시·승인 기록 ═══════ */
+  var db=null, memos=[], memoStore="mem";
+  var LS="irum_hq_memos";
 
-  /* ═══════ 노션 연동 ═══════ */
+  function memoState(txt){ document.getElementById("mState").textContent=txt||""; }
+  function readLocal(){ try{ return JSON.parse(localStorage.getItem(LS)||"[]"); }catch(e){ return []; } }
+  function writeLocal(){ try{ localStorage.setItem(LS,JSON.stringify(memos.slice(0,80))); }catch(e){} }
+
+  function renderMemos(){
+    document.getElementById("memoSub").textContent="기록 "+memos.length+"건";
+    document.getElementById("memoList").innerHTML=memos.length
+      ? memos.map(function(m){
+          return '<li class="'+(m.done?"off":"")+'"><span>'
+            +(m.target?'<span class="tgt">'+esc(m.target)+'</span>':"")
+            +'<span class="mtext">'+esc(m.text)+'</span><em>'+esc(m.at)+'</em></span>'
+            +'<button data-mid="'+esc(m.id)+'">'+(m.done?"되돌리기":"처리함")+'</button></li>'; }).join("")
+      : '<li style="border-left-color:var(--line);background:transparent;border-style:dashed"><span style="color:var(--ink-3)">아직 남기신 지시가 없습니다.</span><span></span></li>';
+  }
+
+  function nowStr(){
+    var d=new Date(), p=function(n){return (n<10?"0":"")+n;};
+    return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes());
+  }
+
+  function saveMemo(){
+    var text=document.getElementById("mtext").value.trim();
+    var target=document.getElementById("mtgt").value.trim();
+    if(!text){ memoState("내용을 적어 주세요."); return; }
+    var rec={id:"m"+Date.now()+Math.floor(Math.random()*1000), text:text, target:target,
+             at:nowStr(), done:false};
+    memos.unshift(rec); renderMemos();
+    document.getElementById("mtext").value=""; document.getElementById("mtgt").value="";
+    log("대표님 지시", (target?("["+target+"] "):"")+text, true);
+    if(db){
+      db.collection("memos").doc(rec.id).set(rec)
+        .then(function(){ memoState("저장했습니다."); })
+        .catch(function(){ memoState("저장에 실패해 이 브라우저에만 남겼습니다."); writeLocal(); });
+    }else{ writeLocal(); memoState("이 브라우저에 남겼습니다."); }
+  }
+
+  function toggleMemo(id){
+    var m=memos.filter(function(x){return x.id===id;})[0]; if(!m) return;
+    m.done=!m.done; renderMemos();
+    if(db){ db.collection("memos").doc(id).update({done:m.done}).catch(function(){ writeLocal(); }); }
+    else writeLocal();
+  }
+
+  function connectDb(){
+    memos=readLocal(); renderMemos();
+    if(!(window.claude && window.claude.use)){ memoState("이 보기에서는 브라우저에만 저장됩니다."); return; }
+    window.claude.use("db").then(function(d){
+      if(!d){ memoState("이 보기에서는 브라우저에만 저장됩니다."); return; }
+      db=d;
+      try{
+        db.collection("memos").orderBy("at","desc").limit(60).onSnapshot(function(snap){
+          memos=snap.docs.map(function(doc){
+            var v=doc.data()||{};
+            return {id:doc.id, text:v.text||"", target:v.target||"", at:v.at||"", done:!!v.done};
+          });
+          renderMemos(); memoState("");
+        }, function(){ memoState("기록을 읽지 못했습니다. 브라우저 저장본을 보여 드립니다."); });
+      }catch(e){ memoState("이 보기에서는 브라우저에만 저장됩니다."); }
+    }).catch(function(){ memoState("이 보기에서는 브라우저에만 저장됩니다."); });
+  }
+
+  /* ═══════ 노션 ═══════ */
   var DS="collection://86ddb34b-8015-45dc-a1e7-500d75266dc7";
   var SQL='SELECT url, "업무명" AS title, "진행상태" AS status, "대상파트" AS part,'
         + ' "처리담당자" AS owner, "우선도" AS pri, "date:기한:start" AS due'
@@ -1014,72 +1156,56 @@ button.ghost{background:transparent}
     if(typeof v==="string" && v.charAt(0)==="["){ try{ return JSON.parse(v); }catch(e){ return []; } }
     return v?[String(v)]:[];
   }
-
   function mapRows(rows){
     return rows.map(function(r,i){
       var parts=parseParts(r.part);
-      return { id:"n"+i, title:r.title||"(제목 없음)", owner:ownerFor(parts),
-               tag:parts.length?parts.join("·"):(r.pri||""), due:r.due||null,
-               state:STATE_MAP[r.status]||"todo", url:r.url||null, demo:false,
-               cat:classify(r.title,parts) };
+      return { id:"n"+i, title:r.title||"(제목 없음)", team:teamFor(parts), owner:null,
+               due:r.due||null, state:STATE_MAP[r.status]||"todo", url:r.url||null,
+               demo:false, cat:classify(r.title,parts) };
     });
   }
-
   function badge(kind,text){
     document.getElementById("srcBadge").className="src "+kind;
     document.getElementById("srcText").textContent=text;
   }
   function notice(kind,title,body){
     document.getElementById("boardNotice").innerHTML= kind
-      ? '<p class="notice '+kind+'"><span><b>'+esc(title)+'</b> '+esc(body)+'</span></p>' : "";
+      ? '<p class="notice '+kind+'"><b>'+esc(title)+'</b> '+esc(body)+'</p>' : "";
   }
-
-  /* 오류 코드마다 다른 안내 — 한 덩어리로 뭉뚱그리지 않는다 */
   function onMcpError(code,message){
     switch(code){
       case "server_not_connected":
         badge("warn","노션 미연결");
-        notice("warn","노션이 연결되어 있지 않습니다.",
-          "claude.ai 설정 → 커넥터에서 Notion을 추가하면 실제 업무판이 들어옵니다. 지금은 예시 5건입니다."); break;
+        notice("warn","노션이 연결되어 있지 않습니다.","claude.ai 설정 → 커넥터에서 Notion을 추가하면 실제 업무판이 들어옵니다. 지금은 예시입니다."); break;
       case "needs_reauth":
         badge("warn","노션 재연결 필요");
-        notice("warn","노션 연결이 만료됐습니다.",
-          "claude.ai 설정 → 커넥터에서 Notion을 다시 연결해 주세요."); break;
+        notice("warn","노션 연결이 만료됐습니다.","claude.ai 설정 → 커넥터에서 Notion을 다시 연결해 주세요."); break;
       case "selection_required":
         badge("warn","노션 선택 필요");
-        notice("warn","연결된 노션 계정이 여러 개입니다.",
-          "어느 계정을 쓸지 한 번 골라 주시면 실제 업무판이 들어옵니다."); break;
-      case "not_in_manifest":
-      case "consent_required":
-        badge("warn","노션 사용 허용 필요");
-        notice("warn","이 페이지의 노션 사용이 허용되지 않았습니다.",
-          "권한을 묻는 창에서 「허용」을 누르면 실제 업무판을 읽어 옵니다."); break;
-      case "blocked_by_policy":
-      case "approval_required":
+        notice("warn","연결된 노션 계정이 여러 개입니다.","어느 계정을 쓸지 한 번 골라 주세요."); break;
+      case "not_in_manifest": case "consent_required":
+        badge("warn","노션 허용 필요");
+        notice("warn","이 페이지의 노션 사용이 허용되지 않았습니다.","권한을 묻는 창에서 「허용」을 누르면 실제 업무판을 읽어 옵니다."); break;
+      case "blocked_by_policy": case "approval_required":
         badge("warn","조직 정책 제한");
-        notice("warn","조직 정책이 이 노션 호출을 막고 있습니다.",
-          "관리자 승인이 필요합니다. 그때까지는 예시 데이터입니다."); break;
-      case "not_granted":
-      case "capability_disabled":
-      case "capability_removed":
+        notice("warn","조직 정책이 이 노션 호출을 막고 있습니다.","관리자 승인이 필요합니다."); break;
+      case "not_granted": case "capability_disabled": case "capability_removed":
         badge("demo","예시 데이터");
-        notice("info","이 화면에서는 노션 연동을 쓸 수 없습니다.",
-          "claude.ai에서 이 페이지를 직접 열면 실제 업무판이 들어옵니다."); break;
+        notice("info","이 화면에서는 노션 연동을 쓸 수 없습니다.","claude.ai에서 이 페이지를 직접 열면 실제 업무판이 들어옵니다."); break;
       case "tool_error":
         badge("warn","노션 응답 오류");
         notice("bad","노션이 요청을 거절했습니다.", message||"업무판 구조가 바뀌었을 수 있습니다."); break;
       default:
         if(notionLive){ badge("warn","노션 잠시 끊김");
-          notice("warn","노션에 잠시 닿지 않습니다.","마지막으로 받은 내용을 그대로 보여 드립니다."); }
+          notice("warn","노션에 잠시 닿지 않습니다.","마지막으로 받은 내용을 보여 드립니다."); }
         else{ badge("warn","노션 연결 대기");
-          notice("warn","노션에 아직 닿지 못했습니다.","잠시 뒤 다시 시도합니다. 지금은 예시 데이터입니다."); }
+          notice("warn","노션에 아직 닿지 못했습니다.","잠시 뒤 다시 시도합니다. 지금은 예시입니다."); }
     }
   }
-
   function connectNotion(){
     if(!(window.claude && window.claude.use)){
       badge("demo","예시 데이터");
-      notice("info","노션에 연결되지 않은 보기입니다.","claude.ai에서 이 페이지를 열면 실제 업무판이 들어옵니다.");
+      notice("info","노션에 연결되지 않은 보기입니다.","claude.ai에서 열면 실제 업무판이 들어옵니다.");
       return;
     }
     window.claude.use("mcp").then(function(mcp){
@@ -1092,13 +1218,19 @@ button.ghost{background:transparent}
           var rows=(p&&p.results)||(p&&p.rows)||(Array.isArray(p)?p:null);
           if(!rows){ onMcpError("tool_error","응답에서 행을 찾지 못했습니다."); return; }
           notionRows=rows; notionLive=true;
-          var extra=tasks.filter(function(t){ return t.demo && String(t.id).charAt(0)==="m"; });
-          tasks=extra.concat(mapRows(rows));
+          var keep=tasks.filter(function(t){ return t.demo && String(t.id).charAt(0)==="m"; });
+          tasks=assignOwners(keep.concat(mapRows(rows)));
+          /* 이미 일하는 사람의 카드는 진행 상태를 유지한다 */
+          STAFF.forEach(function(s){
+            if(s.state!=="working") return;
+            var t=tasks.filter(function(x){return x.title===s.task;})[0];
+            if(t){ t.owner=s.id; t.state="doing"; } else { s.state="idle"; s.task=null; }
+          });
           var when=(ev.result.cache&&ev.result.cache.storedAt)?new Date(ev.result.cache.storedAt):new Date();
           var hh=when.getHours(), mm=when.getMinutes();
           badge("live","노션 연결됨 · "+rows.length+"건 · "+(hh<10?"0":"")+hh+":"+(mm<10?"0":"")+mm);
           notice("","","");
-          document.getElementById("boardSub").textContent="노션 총괄 업무관리 DB · 카테고리 자동 분류";
+          document.getElementById("boardSub").textContent="노션 총괄 업무관리 DB · 팀 안에서 직원에게 배정";
           refresh();
         },
         {refetchInterval:180000}
@@ -1108,31 +1240,53 @@ button.ghost{background:transparent}
 
   /* ═══════ 배선 ═══════ */
   document.getElementById("staff").addEventListener("click",function(e){
-    var b=e.target.closest("[data-agent]"); if(b) select(b.getAttribute("data-agent"));
+    var b=e.target.closest("[data-sid]"); if(b){ selected=b.getAttribute("data-sid"); renderStaff(); }
   });
   document.getElementById("board").addEventListener("click",function(e){
-    var s=e.target.closest("[data-seat]"); if(s){ seat(s.getAttribute("data-seat")); return; }
-    var d=e.target.closest("[data-adv]"); if(d) advance(d.getAttribute("data-adv"));
+    var s=e.target.closest("[data-seat]"); if(s){ toggleTask(s.getAttribute("data-seat")); return; }
+    var m=e.target.closest("[data-memo]");
+    if(m){
+      var t=tasks.filter(function(x){return x.id===m.getAttribute("data-memo");})[0];
+      if(t){ document.getElementById("mtgt").value=t.title; document.getElementById("mtext").focus(); }
+    }
   });
   document.getElementById("catbar").addEventListener("click",function(e){
     var c=e.target.closest("[data-cat]");
-    if(c){ catFilter=c.getAttribute("data-cat"); renderCatBar(); renderBoard(); return; }
-    var m=e.target.closest("[data-mode]");
-    if(m){ groupMode=m.getAttribute("data-mode"); renderCatBar(); renderBoard(); }
+    if(c){ catFilter=c.getAttribute("data-cat"); renderCatBar(); renderBoard(); }
   });
+  document.querySelector(".modesw").addEventListener("click",function(e){
+    var m=e.target.closest("[data-mode]"); if(!m) return;
+    groupMode=m.getAttribute("data-mode");
+    [].forEach.call(document.querySelectorAll(".modesw [data-mode]"),function(b){
+      b.setAttribute("aria-pressed",String(b.getAttribute("data-mode")===groupMode)); });
+    renderBoard();
+  });
+  document.getElementById("q").addEventListener("input",function(e){
+    query=e.target.value.trim(); renderBoard();
+  });
+  document.getElementById("memoList").addEventListener("click",function(e){
+    var b=e.target.closest("[data-mid]"); if(b) toggleMemo(b.getAttribute("data-mid"));
+  });
+  document.getElementById("mSave").addEventListener("click",saveMemo);
+  document.getElementById("mClear").addEventListener("click",function(){
+    document.getElementById("mtext").value=""; document.getElementById("mtgt").value=""; memoState("");
+  });
+  document.getElementById("btnAuto").addEventListener("click",function(){ setAuto(!auto); });
   document.getElementById("btnMeet").addEventListener("click",startMeeting);
   document.getElementById("btnNext").addEventListener("click",nextSpeaker);
   document.getElementById("btnEnd").addEventListener("click",endMeeting);
   document.getElementById("btnReset").addEventListener("click",reset);
 
+  tasks=assignOwners(seedCopy());
   refresh();
   if(typeof THREE==="undefined"){
-    canvas.parentNode.innerHTML='<div class="fallback">3D 화면(three.js)을 불러오지 못했습니다. 새로 고침해 주세요. 아래 업무판·팀장·엔진 목록은 그대로 작동합니다.</div>';
+    canvas.parentNode.innerHTML='<div class="fallback">3D 화면(three.js)을 불러오지 못했습니다. 새로 고침해 주세요. 아래 업무판·직원·AI 현황은 그대로 작동합니다.</div>';
   }else{
     buildScene();
-    AGENTS.forEach(addBody);
+    STAFF.forEach(addBody);
     buildPulses();
   }
   connectNotion();
+  connectDb();
 })();
 </script>
