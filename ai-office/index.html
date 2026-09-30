@@ -189,6 +189,50 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
 .log p.act{border-left-color:var(--brand)}
 .log p.act b{color:var(--brand-ink)}
 
+/* ── 조직도 ── */
+.orgcard{margin-top:16px}
+.org{padding:20px 14px 10px;overflow-x:auto}
+.orgin{min-width:900px}
+.boss{display:flex;flex-direction:column;align-items:center;gap:1px;margin:0 auto;width:max-content;
+  background:var(--panel-2);border:2px solid var(--brand);border-radius:11px;padding:9px 26px;text-align:center}
+.boss b{font-size:1.02rem;font-weight:700;letter-spacing:-.01em;color:var(--brand-ink)}
+.boss span{font-size:.7rem;color:var(--ink-3)}
+.boss em{font-style:normal;font-family:var(--f-mono);font-size:.66rem;color:var(--brand-ink);
+  background:var(--brand-soft);border-radius:999px;padding:1px 8px;margin-top:4px;font-weight:600}
+.trunk{width:2px;height:20px;background:var(--line);margin:0 auto}
+.ocols{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;border-top:2px solid var(--line)}
+.ocol{position:relative;padding-top:20px;min-width:0}
+.ocol::before{content:"";position:absolute;top:0;left:50%;width:2px;height:20px;background:var(--line)}
+.ohead{background:var(--tc);border-radius:9px;padding:7px 11px;color:#fff;
+  display:flex;align-items:baseline;justify-content:space-between;gap:6px}
+.ohead b{font-size:.86rem;font-weight:700;letter-spacing:-.01em}
+.ohead span{font-family:var(--f-mono);font-size:.62rem;opacity:.8;font-weight:500;white-space:nowrap}
+.orail{position:relative;margin-top:12px;padding-left:15px;display:flex;flex-direction:column;gap:8px}
+.orail::before{content:"";position:absolute;left:5px;top:-8px;bottom:18px;width:2px;background:var(--tc);opacity:.35}
+.ocard{position:relative;display:block;width:100%;text-align:left;background:var(--panel);
+  border:1px solid var(--line);border-left:3px solid var(--ec);border-radius:0 9px 9px 0;
+  padding:7px 10px;font-family:inherit;cursor:pointer}
+.ocard::before{content:"";position:absolute;left:-10px;top:18px;width:10px;height:2px;background:var(--tc);opacity:.35}
+.ocard:hover{border-color:var(--brand);border-left-color:var(--ec)}
+.ocard[aria-pressed="true"]{background:var(--panel-2);box-shadow:0 0 0 2px var(--brand-soft)}
+.ocard.busy{border-color:var(--t2)}
+.oname{display:block;font-size:.84rem;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.oname .olead{font-family:var(--f-mono);font-size:.64rem;color:var(--brand-ink);background:var(--brand-soft);
+  border-radius:4px;padding:0 5px;margin-left:5px;font-weight:600;vertical-align:1px}
+.orole{display:block;font-size:.7rem;color:var(--ink-3);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ometa{display:flex;align-items:center;gap:5px;margin-top:5px;font-family:var(--f-mono);font-size:.63rem;color:var(--ink-2)}
+.ometa i{width:8px;height:8px;border-radius:2px;background:var(--ec);flex:none}
+.ometa em{font-style:normal;margin-left:auto;padding:1px 6px;border-radius:999px;font-weight:600;
+  background:var(--panel-2);color:var(--ink-3)}
+.ocard.busy .ometa em{background:var(--t2s);color:var(--t2)}
+.ocard.meet .ometa em{background:var(--t3s);color:var(--t3)}
+.otask{display:block;font-size:.69rem;color:var(--t2);margin-top:4px;line-height:1.4;
+  border-top:1px dashed var(--line-2);padding-top:4px;word-break:break-word}
+.orglegend{display:flex;flex-wrap:wrap;gap:6px 12px;padding:10px 14px;border-top:1px solid var(--line-2);
+  font-size:.7rem;color:var(--ink-2)}
+.orglegend span{display:inline-flex;align-items:center;gap:5px}
+.orglegend i{width:9px;height:9px;border-radius:2px;flex:none}
+@media (max-width:760px){.orgin{min-width:820px}}
 .note{margin-top:16px;font-size:.76rem;color:var(--ink-2);border-top:1px solid var(--line);padding-top:12px}
 .note strong{color:var(--ink)}
 .note code{font-family:var(--f-mono);font-size:.72rem;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
@@ -276,6 +320,12 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
         <div class="log" id="log"></div>
       </div>
     </div>
+  </div>
+
+  <div class="card orgcard">
+    <div class="card-h"><h2>조직도</h2><span class="sub" id="orgSub">1대표 · 5팀 · 12명</span></div>
+    <div class="org"><div class="orgin" id="org"></div></div>
+    <div class="orglegend" id="orgLegend"></div>
   </div>
 
   <p class="note"><strong>이 화면이 무엇인가</strong> — 이룸 AI 본사 한 곳에 5개 팀을 둔 구조입니다. 업무는 <code>노션 총괄 업무관리 DB</code>에서 실제로 읽어 오고, 팀 안에서 직원들에게 나눠 배정됩니다. <strong>자동 운영</strong>을 켜면 직원들이 순서대로 업무를 잡아 일하고 끝내는 흐름이 계속 돌아갑니다 — <strong>노션 데이터는 바뀌지 않는 화면 시연</strong>이고, 실제 실행 연결은 다음 단계입니다.</p>
@@ -829,7 +879,7 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     pointer.y=-((e.clientY-r.top)/r.height)*2+1;
     ray.setFromCamera(pointer,camera);
     var hits=ray.intersectObjects(pickables,false);
-    if(hits.length){ selected=hits[0].object.userData.sid; renderStaff(); }
+    if(hits.length){ selected=hits[0].object.userData.sid; renderStaff(); renderOrg(); }
   }
 
   /* ═══════ 패널 ═══════ */
@@ -870,6 +920,35 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
           +p+'</button>';
       }).join("");
     }).join("");
+  }
+
+  function renderOrg(){
+    var working=STAFF.filter(function(s){return s.state==="working";}).length;
+    var open=memos.filter(function(m){return !m.done;}).length;
+    document.getElementById("orgSub").textContent="대표 1 · 5팀 · 12명 · 근무 "+working;
+    var head='<div class="boss"><b>IAN 대표님</b><span>모든 결정은 여기서</span>'
+      +(open?'<em>지시 '+open+'건 진행 중</em>':"")+'</div><div class="trunk"></div>';
+    var cols=TEAMS.map(function(t){
+      var cards=t.members.map(function(s){
+        var cls=s.state==="working"?"busy":(s.state==="meeting"?"meet":"");
+        var st=s.state==="working"?"근무":(s.state==="meeting"?"회의":"대기");
+        return '<button class="ocard '+cls+'" data-sid="'+s.id+'" aria-pressed="'+(s.id===selected)+'"'
+          +' style="--ec:'+ENG[s.eng].css+'">'
+          +'<span class="oname">'+s.n+(s.lead?'<span class="olead">팀장</span>':"")+'</span>'
+          +'<span class="orole">'+s.role+'</span>'
+          +'<span class="ometa"><i></i>'+ENG[s.eng].name+'<em>'+st+'</em></span>'
+          +(s.task?'<span class="otask">'+esc(s.task)+'</span>':"")
+          +'</button>';
+      }).join("");
+      return '<div class="ocol" style="--tc:'+t.css+'">'
+        +'<div class="ohead"><b>'+t.name+'</b><span>'+t.en+'</span></div>'
+        +'<div class="orail">'+cards+'</div></div>';
+    }).join("");
+    document.getElementById("org").innerHTML=head+'<div class="ocols">'+cols+'</div>';
+    document.getElementById("orgLegend").innerHTML=
+      '<span style="font-family:var(--f-mono);font-size:.62rem;letter-spacing:.06em;color:var(--ink-3)">쓰는 AI</span>'
+      +ENGINES.map(function(e){
+        return '<span><i style="background:'+e.css+'"></i>'+e.name+'</span>'; }).join("");
   }
 
   /* ═══════ 업무판 ═══════ */
@@ -1077,7 +1156,7 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     document.getElementById("clock").textContent=stamp();
     refresh();
   }
-  function refresh(){ renderEngines(); renderStaff(); renderCatBar(); renderBoard(); renderLog(); }
+  function refresh(){ renderEngines(); renderStaff(); renderOrg(); renderCatBar(); renderBoard(); renderLog(); }
 
   /* ═══════ 지시·승인 기록 ═══════ */
   var db=null, memos=[], memoStore="mem";
@@ -1096,6 +1175,8 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
             +'<span class="mtext">'+esc(m.text)+'</span><em>'+esc(m.at)+'</em></span>'
             +'<button data-mid="'+esc(m.id)+'">'+(m.done?"되돌리기":"처리함")+'</button></li>'; }).join("")
       : '<li style="border-left-color:var(--line);background:transparent;border-style:dashed"><span style="color:var(--ink-3)">아직 남기신 지시가 없습니다.</span><span></span></li>';
+
+    if(document.getElementById("orgSub")) renderOrg();
   }
 
   function nowStr(){
@@ -1240,7 +1321,10 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
 
   /* ═══════ 배선 ═══════ */
   document.getElementById("staff").addEventListener("click",function(e){
-    var b=e.target.closest("[data-sid]"); if(b){ selected=b.getAttribute("data-sid"); renderStaff(); }
+    var b=e.target.closest("[data-sid]"); if(b){ selected=b.getAttribute("data-sid"); renderStaff(); renderOrg(); }
+  });
+  document.getElementById("org").addEventListener("click",function(e){
+    var b=e.target.closest("[data-sid]"); if(b){ selected=b.getAttribute("data-sid"); renderStaff(); renderOrg(); }
   });
   document.getElementById("board").addEventListener("click",function(e){
     var s=e.target.closest("[data-seat]"); if(s){ toggleTask(s.getAttribute("data-seat")); return; }
