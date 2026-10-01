@@ -496,8 +496,8 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
 
   /* ═══════ 3D ═══════ */
   var scene,camera,renderer,ray,pointer,pickables=[],bodies={},monitors={},t0=Date.now();
-  var engPos={}, engLamp={}, pulses=[];
-  var yaw=-0.36, pitch=0.60, dist=48, dragging=false, lastX=0, lastY=0, moved=0;
+  var engPos={}, engLamp={}, pulses=[], texJobs=[];
+  var yaw=-0.36, pitch=0.44, dist=48, dragging=false, lastX=0, lastY=0, moved=0;
   var C={ floor:0xd6d1c7, floorLine:0xc9c3b7, wall:0xf3efe6, wallDark:0x30343a,
           walnut:0x9c6f47, walnutDark:0x7d5836, white:0xf7f6f3, metal:0xb8bcc2,
           charcoal:0x464b52, brass:0xd6b168, glass:0xcddeea, rack:0x262b33 };
@@ -516,30 +516,82 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     for(var i=0;i<n;i++) g.fillText(lines[i], w/2, y0+i*lh);
     var t=new THREE.CanvasTexture(c); t.needsUpdate=true; return t;
   }
-  /* 현판 — 놋쇠 선 하나에 큰 한글, 아래 자간 넓힌 영문 */
+  /* 현판 — 밝은 판에 짙은 글씨. 검은 벽에서도 멀리서 읽힌다 */
   function signTex(){
-    var w=1600,h=420,c=document.createElement("canvas"); c.width=w; c.height=h;
+    var w=1760,h=460,c=document.createElement("canvas"); c.width=w; c.height=h;
     var g=c.getContext("2d");
-    g.clearRect(0,0,w,h);
-    g.textBaseline="alphabetic";
-    g.fillStyle="#f0e6d2";
-    g.font='300 150px "IBM Plex Sans KR","Malgun Gothic",sans-serif';
-    var a="이룸", wa=g.measureText(a).width;
-    g.font='700 150px "IBM Plex Sans KR","Malgun Gothic",sans-serif';
-    g.fillText(a, w/2-wa/2-70, 190);
-    g.fillStyle="#d6b168";
-    g.font='300 150px "IBM Plex Sans KR","Malgun Gothic",sans-serif';
-    g.fillText("AI 본사", w/2-wa/2+wa-40, 190);
-    /* 놋쇠 선 */
-    g.fillStyle="#d6b168"; g.fillRect(w/2-330,238,660,3);
-    /* 자간 넓힌 영문 */
-    g.fillStyle="#b9ae99"; g.font='500 46px "IBM Plex Mono",monospace';
-    var en="IRUM  AI  HEADQUARTERS", sp=13, tot=0, i;
+    g.fillStyle="#f4eee2"; g.fillRect(0,0,w,h);                 /* 밝은 바탕 */
+    g.fillStyle="#d6b168"; g.fillRect(0,0,w,14); g.fillRect(0,h-14,w,14);
+    g.textBaseline="alphabetic"; g.textAlign="left";
+    var big='700 168px "IBM Plex Sans KR","Malgun Gothic",sans-serif';
+    var mid='400 168px "IBM Plex Sans KR","Malgun Gothic",sans-serif';
+    g.font=big; var w1=g.measureText("이룸").width;
+    g.font=mid; var w2=g.measureText(" AI 본사").width;
+    var x0=(w-(w1+w2))/2;
+    g.font=big; g.fillStyle="#1a1d22"; g.fillText("이룸", x0, 236);
+    g.font=mid; g.fillStyle="#8a6a2f"; g.fillText(" AI 본사", x0+w1, 236);
+    g.fillStyle="#c9a85e"; g.fillRect(w/2-300,282,600,4);
+    g.fillStyle="#6b6457"; g.font='600 50px "IBM Plex Mono",monospace';
+    var en="IRUM  AI  HEADQUARTERS", sp=15, tot=0, i;
     for(i=0;i<en.length;i++) tot+=g.measureText(en[i]).width+sp;
     var x=w/2-tot/2;
-    for(i=0;i<en.length;i++){ g.fillText(en[i],x,308); x+=g.measureText(en[i]).width+sp; }
+    for(i=0;i<en.length;i++){ g.fillText(en[i],x,362); x+=g.measureText(en[i]).width+sp; }
     var t=new THREE.CanvasTexture(c); t.needsUpdate=true; return t;
   }
+
+  /* 엔진 심볼 — 글꼴에 없는 기호를 쓰지 않고 직접 그린다 */
+  function engSymbol(g,id,cx,cy,r,col){
+    g.save(); g.strokeStyle=col; g.fillStyle=col; g.lineWidth=Math.max(3,r*0.17);
+    g.lineCap="round"; g.lineJoin="round";
+    if(id==="claude"){                                   /* 8방향 별빛 */
+      for(var i=0;i<8;i++){
+        var a=i*Math.PI/4, L=(i%2?r*0.62:r);
+        g.beginPath(); g.moveTo(cx+Math.cos(a)*r*0.2,cy+Math.sin(a)*r*0.2);
+        g.lineTo(cx+Math.cos(a)*L,cy+Math.sin(a)*L); g.stroke();
+      }
+    }else if(id==="codex"){                              /* < > 꺾쇠 */
+      g.beginPath(); g.moveTo(cx-r*0.18,cy-r*0.72); g.lineTo(cx-r*0.86,cy); g.lineTo(cx-r*0.18,cy+r*0.72); g.stroke();
+      g.beginPath(); g.moveTo(cx+r*0.18,cy-r*0.72); g.lineTo(cx+r*0.86,cy); g.lineTo(cx+r*0.18,cy+r*0.72); g.stroke();
+    }else if(id==="gemini"){                             /* 4방향 반짝임 */
+      g.beginPath();
+      g.moveTo(cx,cy-r); g.quadraticCurveTo(cx+r*0.16,cy-r*0.16,cx+r,cy);
+      g.quadraticCurveTo(cx+r*0.16,cy+r*0.16,cx,cy+r);
+      g.quadraticCurveTo(cx-r*0.16,cy+r*0.16,cx-r,cy);
+      g.quadraticCurveTo(cx-r*0.16,cy-r*0.16,cx,cy-r);
+      g.closePath(); g.fill();
+    }else if(id==="higgs"){                              /* 재생 삼각형 */
+      g.beginPath(); g.moveTo(cx-r*0.6,cy-r*0.82); g.lineTo(cx+r*0.86,cy); g.lineTo(cx-r*0.6,cy+r*0.82);
+      g.closePath(); g.fill();
+    }else{                                               /* anti — 육각형 + 위 화살표 */
+      g.beginPath();
+      for(var k=0;k<6;k++){
+        var b=-Math.PI/2+k*Math.PI/3, px=cx+Math.cos(b)*r, py=cy+Math.sin(b)*r;
+        if(k===0) g.moveTo(px,py); else g.lineTo(px,py);
+      }
+      g.closePath(); g.stroke();
+      g.beginPath(); g.moveTo(cx,cy+r*0.42); g.lineTo(cx,cy-r*0.4); g.stroke();
+      g.beginPath(); g.moveTo(cx-r*0.3,cy-r*0.1); g.lineTo(cx,cy-r*0.46); g.lineTo(cx+r*0.3,cy-r*0.1); g.stroke();
+    }
+    g.restore();
+  }
+
+  /* 엔진 표찰 — 짙은 판 + 엔진색 심볼 + 흰 글자. 랙 위·앞에 붙인다 */
+  function engTex(e,W,H){
+    var c=document.createElement("canvas"); c.width=W; c.height=H;
+    var g=c.getContext("2d");
+    g.fillStyle="#151a20"; g.fillRect(0,0,W,H);
+    g.fillStyle=e.css; g.fillRect(0,0,W,Math.round(H*0.08));
+    g.fillStyle="#2c333c"; g.fillRect(0,H-Math.round(H*0.04),W,H);
+    var r=H*0.26, cy=H*0.54;
+    engSymbol(g,e.id,H*0.46,cy,r,e.css);
+    g.textAlign="left"; g.textBaseline="middle";
+    g.fillStyle="#f2f5f8"; g.font='700 '+Math.round(H*0.33)+'px "IBM Plex Sans KR",sans-serif';
+    g.fillText(e.name, H*0.92, cy-H*0.05);
+    g.fillStyle=e.css; g.font='500 '+Math.round(H*0.15)+'px "IBM Plex Mono",monospace';
+    g.fillText(e.live?"CONNECTED":"STANDBY", H*0.94, cy+H*0.22);
+    var t=new THREE.CanvasTexture(c); t.needsUpdate=true; return t;
+  }
+
   function panel(w,h,tex,opaque){
     return new THREE.Mesh(new THREE.PlaneGeometry(w,h),
       new THREE.MeshBasicMaterial({map:tex,transparent:!opaque,side:THREE.DoubleSide}));
@@ -587,7 +639,9 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     });
 
     /* 현판 + 리셉션 */
-    var sign=panel(9.0,2.36,signTex()); sign.position.set(15,3.4,-18.68); scene.add(sign);
+    box(11.5,3.3,0.12,C.brass,15,3.3,-18.76,false);          /* 놋쇠 테두리 */
+    var sign=panel(11.0,2.87,signTex(),true); sign.position.set(15,3.3,-18.68); scene.add(sign);
+    texJobs.push({m:sign,make:signTex});
     box(6.4,1.05,1.2,C.walnut,15,0.52,-16.4,true);
     box(6.8,0.12,1.6,C.white,15,1.12,-16.4,true);
     box(6.4,0.16,0.16,C.brass,15,0.98,-15.82,false);
@@ -604,6 +658,12 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     addPlant(-21.0,11.0);
 
     window.addEventListener("resize",resize);
+    /* 한글 글꼴이 늦게 오면 표찰·현판을 한 번 다시 그린다 */
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){
+      texJobs.forEach(function(j){
+        try{ j.m.material.map=j.make(); j.m.material.needsUpdate=true; }catch(err){}
+      });
+    });
     resize(); animate();
   }
 
@@ -633,16 +693,30 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     flat(6.4,15.4,0x2a2e35,cx,0.03,cz);
     glassWall(0.16,3.9,15.6, cx-3.2, cz);
     glassWall(6.6,3.9,0.16, cx, cz-7.7);
-    var sign=panel(5.0,0.86,textTex(["AI 엔진 룸  ENGINE ROOM"],640,110,null,"#cfd6df",42,700));
-    sign.position.set(cx,3.4,cz-7.6); scene.add(sign);
+    var rsTex=function(){ return textTex(["AI 엔진 룸  ENGINE ROOM"],700,130,"#1b2027","#dbe3ec",44,700); };
+    box(5.3,1.0,0.08,C.rack,cx,3.4,cz-7.64,false);
+    var sign=panel(5.1,0.95,rsTex(),true);
+    sign.position.set(cx,3.4,cz-7.58); scene.add(sign);
+    texJobs.push({m:sign,make:rsTex});
 
     ENGINES.forEach(function(e,i){
       var z=cz-6.0+i*3.0;
       box(2.4,3.0,1.6,C.rack,cx+0.5,1.5,z,true);
       box(2.46,0.1,1.66,e.hex,cx+0.5,3.06,z,false);
-      for(var k=0;k<6;k++) box(2.0,0.07,0.06,e.hex,cx-0.5,0.5+k*0.48,z-0.83,false);
-      var lab=panel(2.2,0.56,textTex([e.name],420,110,null,"#eef2f7",46,700));
-      lab.position.set(cx-0.72,2.5,z); lab.rotation.y=-Math.PI/2; scene.add(lab);
+      /* LED — 카메라를 보는 앞면(+z)에 */
+      for(var k=0;k<4;k++) box(2.0,0.07,0.06,e.hex,cx+0.5,0.46+k*0.40,z+0.81,false);
+      /* 위에서 바로 읽히는 표찰 */
+      var top=panel(2.1,1.05,engTex(e,560,280),true);
+      top.rotation.x=-Math.PI/2; top.position.set(cx+0.5,3.13,z); scene.add(top);
+      texJobs.push({m:top,make:function(){return engTex(e,560,280);}});
+      /* 앞면 표찰 */
+      var front=panel(2.2,0.8,engTex(e,616,224),true);
+      front.position.set(cx+0.5,2.25,z+0.83); scene.add(front);
+      texJobs.push({m:front,make:function(){return engTex(e,616,224);}});
+      /* 왼쪽 측면 표찰 */
+      var lab=panel(2.2,0.8,engTex(e,616,224),true);
+      lab.position.set(cx-0.72,2.25,z); lab.rotation.y=-Math.PI/2; scene.add(lab);
+      texJobs.push({m:lab,make:function(){return engTex(e,616,224);}});
       var lamp=new THREE.Mesh(new THREE.SphereGeometry(0.24,14,12),
         new THREE.MeshBasicMaterial({color:e.hex}));
       lamp.position.set(cx-1.0,1.8,z); scene.add(lamp);
@@ -860,7 +934,7 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     if(!dragging) return;
     var dx=e.clientX-lastX, dy=e.clientY-lastY;
     moved+=Math.abs(dx)+Math.abs(dy);
-    yaw-=dx*0.006; pitch=Math.max(0.26,Math.min(1.25,pitch+dy*0.004));
+    yaw-=dx*0.006; pitch=Math.max(0.16,Math.min(1.25,pitch+dy*0.004));
     lastX=e.clientX; lastY=e.clientY;
   });
   canvas.addEventListener("pointerup",function(e){
