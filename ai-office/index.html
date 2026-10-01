@@ -490,14 +490,14 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     {t:"겨울특강 일정 확정 → 안내문 잠금",   team:"mkt"}
   ];
 
-  var MEET=[10.5,4.0];
-  var MEET_SEATS=[[8.1,1.8],[12.9,1.8],[7.3,4.8],[13.7,4.8],[10.5,6.6]];
-  var ENGINE_ROOM=[21.5,-4.5];
+  var MEET=[9.3,4.0];
+  var MEET_SEATS=[[6.9,1.8],[11.7,1.8],[6.1,4.8],[12.5,4.8],[9.3,6.6]];
+  var ENGINE_ROOM=[19.5,-4.5];
 
   /* ═══════ 3D ═══════ */
   var scene,camera,renderer,ray,pointer,pickables=[],bodies={},monitors={},t0=Date.now();
   var engPos={}, engLamp={}, pulses=[], texJobs=[];
-  var yaw=-0.36, pitch=0.44, dist=48, dragging=false, lastX=0, lastY=0, moved=0;
+  var yaw=-0.10, pitch=0.42, dist=38, dragging=false, lastX=0, lastY=0, moved=0;
   var C={ floor:0xd6d1c7, floorLine:0xc9c3b7, wall:0xf3efe6, wallDark:0x30343a,
           walnut:0x9c6f47, walnutDark:0x7d5836, white:0xf7f6f3, metal:0xb8bcc2,
           charcoal:0x464b52, brass:0xd6b168, glass:0xcddeea, rack:0x262b33 };
@@ -713,6 +713,14 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
       var front=panel(2.2,0.8,engTex(e,616,224),true);
       front.position.set(cx+0.5,2.25,z+0.83); scene.add(front);
       texJobs.push({m:front,make:function(){return engTex(e,616,224);}});
+      /* 머리 위 큰 간판 — 기본 시점에서 읽히는 건 이것이다 */
+      var hy=5.95-i*0.34;                 /* 뒤쪽 간판일수록 높게 — 앞 간판이 가리지 않게 */
+      box(3.74,1.5,0.08,e.hex,cx+0.5,hy,z+0.26,false);
+      var hang=panel(3.6,1.36,engTex(e,900,340),true);
+      hang.position.set(cx+0.5,hy,z+0.33); scene.add(hang);
+      texJobs.push({m:hang,make:function(){return engTex(e,900,340);}});
+      box(0.05,0.9,0.05,C.metal,cx-0.7,hy+1.2,z+0.26,false);
+      box(0.05,0.9,0.05,C.metal,cx+1.7,hy+1.2,z+0.26,false);
       /* 왼쪽 측면 표찰 */
       var lab=panel(2.2,0.8,engTex(e,616,224),true);
       lab.position.set(cx-0.72,2.25,z); lab.rotation.y=-Math.PI/2; scene.add(lab);
@@ -870,8 +878,8 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     if(!renderer) return;
     var t=(Date.now()-t0)/1000;
     var horiz=dist*Math.cos(pitch);
-    camera.position.set(Math.sin(yaw)*horiz+3, Math.max(6,dist*Math.sin(pitch)), Math.cos(yaw)*horiz+5);
-    camera.lookAt(1.0,1.2,-3.0);
+    camera.position.set(Math.sin(yaw)*horiz+3.5, Math.max(6,dist*Math.sin(pitch)), Math.cos(yaw)*horiz+5);
+    camera.lookAt(4.5,1.6,-5.0);
 
     var busy={};
     STAFF.forEach(function(s){
@@ -942,7 +950,7 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     if(moved<6) pick(e);
   });
   canvas.addEventListener("wheel",function(e){
-    e.preventDefault(); dist=Math.max(24,Math.min(72,dist+(e.deltaY>0?2:-2)));
+    e.preventDefault(); dist=Math.max(20,Math.min(72,dist+(e.deltaY>0?2:-2)));
   },{passive:false});
 
   function pick(e){
