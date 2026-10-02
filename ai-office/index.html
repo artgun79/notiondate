@@ -152,7 +152,7 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .catchip[aria-pressed="true"]{color:#221a08}}
 :root[data-theme="dark"] .catchip[aria-pressed="true"]{color:#221a08}
 
-.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line-2)}
+.board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line-2)}
 @media (max-width:620px){.board{grid-template-columns:minmax(0,1fr)}}
 .col{background:var(--panel);padding:10px;min-width:0}
 .col > h4{margin:0 0 8px;font-family:var(--f-mono);font-size:.63rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;gap:6px}
@@ -177,6 +177,32 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
 .task .acts button:hover,.task .acts a:hover{border-color:var(--brand);color:var(--brand)}
 .empty{font-size:.72rem;color:var(--ink-3);border:1px dashed var(--line);border-radius:8px;padding:12px;text-align:center}
 
+/* ── 완료 아카이브 · 노션 전체검색 · 완료 확인 ── */
+.arc{margin-top:16px}
+.arc > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;
+  padding:11px 14px;font-size:.85rem;font-weight:600;letter-spacing:-.01em}
+.arc > summary::-webkit-details-marker{display:none}
+.arc > summary::before{content:"\25B8";font-family:var(--f-mono);font-size:.8rem;color:var(--brand);transition:transform .15s}
+.arc[open] > summary::before{transform:rotate(90deg)}
+.arc > summary b{font-family:var(--f-mono);font-size:.7rem;color:var(--ink-3);font-weight:600}
+.arc > summary span.hint{margin-left:auto;font-size:.7rem;color:var(--ink-3);font-weight:400}
+.arc .inner{border-top:1px solid var(--line-2);padding:11px 14px}
+.task.done-card{opacity:.72;border-left-color:var(--line)!important}
+.task.done-card .t{text-decoration:line-through;text-decoration-color:var(--ink-3)}
+.confirm{display:block;margin-top:6px;padding:6px 8px;border-radius:6px;background:var(--t3s);
+  color:var(--t3);font-size:.7rem;line-height:1.5}
+.confirm .cbtns{display:flex;gap:5px;margin-top:5px}
+.confirm button{font-size:.67rem;padding:2px 9px;border-radius:6px}
+.confirm button.go{background:var(--t3);border-color:var(--t3);color:#fff;font-weight:600}
+.nsbox{border-top:1px solid var(--line-2);padding:11px 14px}
+.nsbox h5{margin:0 0 7px;font-size:.74rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.nsbox h5 em{font-style:normal;font-family:var(--f-mono);font-size:.66rem;color:var(--ink-3);font-weight:500}
+.nslist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.nslist li{font-size:.76rem;border:1px solid var(--line);border-left:3px solid var(--t1);
+  border-radius:0 7px 7px 0;padding:6px 9px;background:var(--panel-2)}
+.nslist li a{font-weight:600;color:var(--ink);text-decoration:none;display:block;word-break:break-word}
+.nslist li a:hover{color:var(--brand)}
+.nslist li em{font-style:normal;font-family:var(--f-mono);font-size:.63rem;color:var(--ink-3);display:block;margin-top:2px}
 .notice{margin:0;padding:9px 14px;font-size:.75rem;border-bottom:1px solid var(--line-2)}
 .notice b{font-weight:600}
 .notice.info{background:var(--t1s);color:var(--t1)}
@@ -277,6 +303,7 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
         <div class="toolbar">
           <input type="search" id="q" placeholder="업무·담당자·팀·카테고리를 한 번에 찾습니다 (예: 숙제표, Lumi, 영상)" autocomplete="off">
           <span class="qhit" id="qhit"></span>
+          <button id="btnNs">노션 전체에서 찾기</button>
           <span class="modesw">
             <button data-mode="cat" aria-pressed="true">카테고리별</button>
             <button data-mode="status" aria-pressed="false">상태별</button>
@@ -285,7 +312,14 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
         </div>
         <div class="catbar" id="catbar"></div>
         <div id="board"></div>
+        <div id="nsResults"></div>
       </div>
+
+      <details class="card arc" id="arcWrap">
+        <summary>완료 아카이브 <b id="arcCount">0건</b>
+          <span class="hint">끝난 일은 업무판에서 빠지고 여기에 쌓입니다</span></summary>
+        <div class="inner"><div class="catgrid" id="archive"></div></div>
+      </details>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:16px">
@@ -462,6 +496,7 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
   var tasks=[], notionLive=false, notionRows=null;
   var catFilter="all", groupMode="cat", query="", selected="otto";
   var auto=false, autoTimer=null, minutes=[], clockMin=540;
+  var mcpNs=null, pending={}, busyWrite={}, nsState=null;
   var mode="idle", speakIdx=-1;
 
   /* 팀 안에서 직원들에게 돌아가며 배정한다 */
@@ -1044,26 +1079,53 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
           .every(function(w){ return hay.indexOf(w.replace(/\s+/g,""))>=0; })
       : true;
   }
-  function visible(){ return tasks.filter(matches); }
+  function openTasks(){ return tasks.filter(function(t){return t.state!=="done";}); }
+  function visible(){ return openTasks().filter(matches); }
+  function archived(){ return tasks.filter(function(t){return t.state==="done";}).filter(matches); }
+
+  function pageIdOf(url){
+    var m=String(url||"").match(/([0-9a-fA-F]{32})/); return m?m[1]:null;
+  }
 
   function taskCard(t,withStatus){
-    var s=SBY[t.owner], c=CATBY[t.cat]||CATBY.etc, tm=TEAM[t.team];
-    var now=(s && s.state==="working" && s.task===t.title);
-    var acts='<button data-seat="'+t.id+'">'+(now?"멈추기":"일 시작")+'</button>'
-            +'<button data-memo="'+t.id+'">지시</button>';
+    var s2=SBY[t.owner], c=CATBY[t.cat]||CATBY.etc, tm=TEAM[t.team];
+    var now=(s2 && s2.state==="working" && s2.task===t.title);
+    var acts="";
+    if(t.state==="done"){
+      acts+='<button data-undo="'+t.id+'">되돌리기</button>';
+    }else{
+      acts+='<button data-seat="'+t.id+'">'+(now?"멈추기":"일 시작")+'</button>'
+          + '<button data-done="'+t.id+'">완료</button>'
+          + '<button data-memo="'+t.id+'">지시</button>';
+    }
     if(t.url) acts+='<a href="'+esc(t.url)+'" target="_blank" rel="noopener">노션</a>';
     var stLabel={todo:"할 일",doing:"진행",done:"완료"}[t.state];
-    return '<div class="task'+(now?" now":"")+'" style="border-left-color:'+(s?ENG[s.eng].css:tm.css)+'">'
-      +(withStatus?'<span class="st '+t.state+'">'+stLabel+'</span>':"")
+
+    var conf="";
+    if(busyWrite[t.id]){
+      conf='<span class="confirm">노션에 저장하는 중입니다…</span>';
+    }else if(pending[t.id]==="done"){
+      conf='<span class="confirm">'+(t.url?'노션의 진행상태를 <b>완료</b>로 바꿉니다.':'이 카드를 완료로 옮깁니다.')
+        +'<span class="cbtns"><button class="go" data-yes="'+t.id+'">완료로 바꾸기</button>'
+        +'<button data-no="'+t.id+'">취소</button></span></span>';
+    }else if(pending[t.id]==="undo"){
+      conf='<span class="confirm">'+(t.url?'노션의 진행상태를 <b>접수</b>로 되돌립니다.':'이 카드를 할 일로 되돌립니다.')
+        +'<span class="cbtns"><button class="go" data-yes="'+t.id+'">되돌리기</button>'
+        +'<button data-no="'+t.id+'">취소</button></span></span>';
+    }
+    return '<div class="task'+(now?" now":"")+(t.state==="done"?" done-card":"")
+      +'" style="border-left-color:'+(s2?ENG[s2.eng].css:tm.css)+'">'
+      +(withStatus&&t.state!=="done"?'<span class="st '+t.state+'">'+stLabel+'</span>':"")
       +'<span class="t">'+esc(t.title)+'</span>'
-      +'<span class="m">'+(s?s.n+" · "+ENG[s.eng].name:"미배정")+' · '+tm.name
+      +'<span class="m">'+(s2?s2.n+" · "+ENG[s2.eng].name:"미배정")+' · '+tm.name
         +(withStatus?"":(" · "+c.name))+(t.due?(" · 기한 "+esc(t.due)):"")+'</span>'
-      +'<span class="acts">'+acts+'</span></div>';
+      +'<span class="acts">'+acts+'</span>'+conf+'</div>';
   }
 
   function renderCatBar(){
-    var counts={}; tasks.forEach(function(t){ counts[t.cat]=(counts[t.cat]||0)+1; });
-    var html='<button class="catchip" data-cat="all" aria-pressed="'+(catFilter==="all")+'">전체 <b>'+tasks.length+'</b></button>';
+    var counts={}, open=openTasks();
+    open.forEach(function(t){ counts[t.cat]=(counts[t.cat]||0)+1; });
+    var html='<button class="catchip" data-cat="all" aria-pressed="'+(catFilter==="all")+'">전체 <b>'+open.length+'</b></button>';
     CATS.forEach(function(c){
       var n=counts[c.id]||0; if(!n) return;
       html+='<button class="catchip" data-cat="'+c.id+'" aria-pressed="'+(catFilter===c.id)+'"'
@@ -1077,7 +1139,7 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     document.getElementById("qhit").textContent=(query||catFilter!=="all")?(list.length+"건"):"";
     if(groupMode==="status"){
       box.className="board";
-      box.innerHTML=[["todo","할 일"],["doing","진행 중"],["done","완료"]].map(function(c){
+      box.innerHTML=[["todo","할 일"],["doing","진행 중"]].map(function(c){
         var items=list.filter(function(t){return t.state===c[0];});
         var inner=items.length?items.slice(0,16).map(function(t){return taskCard(t,false);}).join("")
                              :'<div class="empty">비어 있음</div>';
@@ -1104,7 +1166,6 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
       if(!g.items.length) return;
       var nt=g.items.filter(function(t){return t.state==="todo";}).length;
       var nd=g.items.filter(function(t){return t.state==="doing";}).length;
-      var nf=g.items.filter(function(t){return t.state==="done";}).length;
       var tot=g.items.length;
       out+='<div class="catsec"><h4>'
         +'<span style="width:9px;height:16px;border-radius:2px;background:'+g.css+';display:inline-block"></span>'
@@ -1112,13 +1173,107 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
         +'<span class="bar-mini">'
           +'<i style="width:'+(nt/tot*100)+'%;background:'+g.css+'33"></i>'
           +'<i style="width:'+(nd/tot*100)+'%;background:'+g.css+'"></i>'
-          +'<i style="width:'+(nf/tot*100)+'%;background:'+g.css+'66"></i></span>'
-        +'<em>할 일 '+nt+' · 진행 '+nd+' · 완료 '+nf+'</em></h4>'
+          +'</span>'
+        +'<em>할 일 '+nt+' · 진행 '+nd+'</em></h4>'
         +'<div class="catgrid">'+g.items.slice(0,12).map(function(t){return taskCard(t,true);}).join("")+'</div>'
         +(g.items.length>12?'<div class="empty" style="margin-top:7px">외 '+(g.items.length-12)+'건</div>':"")
         +'</div>';
     });
     box.innerHTML=out||'<div class="catsec"><div class="empty">찾으시는 업무가 없습니다.</div></div>';
+  }
+
+  function renderArchive(){
+    var list=archived();
+    document.getElementById("arcCount").textContent=list.length+"건";
+    document.getElementById("archive").innerHTML=list.length
+      ? list.slice(0,60).map(function(t){return taskCard(t,false);}).join("")
+      : '<div class="empty">완료된 일이 아직 없습니다.</div>';
+  }
+
+  /* 업무판에 없는 일은 노션 전체에서 찾는다 — 설명회처럼 다른 페이지에 사는 일 */
+  function renderNs(){
+    var box=document.getElementById("nsResults");
+    if(!nsState){ box.innerHTML=""; return; }
+    if(nsState.loading){
+      box.innerHTML='<div class="nsbox"><h5>노션 전체 검색 <em>찾는 중…</em></h5></div>'; return;
+    }
+    if(nsState.error){
+      box.innerHTML='<div class="nsbox"><h5>노션 전체 검색 <em>'+esc(nsState.error)+'</em></h5></div>'; return;
+    }
+    var r=nsState.items||[];
+    box.innerHTML='<div class="nsbox"><h5>노션 전체 검색 — 「'+esc(nsState.q)+'」'
+      +'<em>'+r.length+'건 · 업무판 밖의 페이지입니다</em></h5>'
+      +(r.length
+        ? '<ul class="nslist">'+r.map(function(x){
+            return '<li><a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.title)+'</a>'
+              +(x.path?'<em>'+esc(x.path)+'</em>':"")+'</li>'; }).join("")+'</ul>'
+        : '<div class="empty">노션 전체에서도 찾지 못했습니다.</div>')
+      +'</div>';
+  }
+
+  function notionSearch(){
+    var q=query.trim();
+    if(!q){ nsState=null; renderNs(); return; }
+    if(!mcpNs){
+      nsState={q:q,error:"노션에 연결되지 않은 보기입니다"}; renderNs(); return;
+    }
+    nsState={q:q,loading:true}; renderNs();
+    mcpNs.callTool("Notion","notion-search",
+      {query:q, page_size:10, max_highlight_length:0},
+      {cache:{staleTime:60000}})
+      .then(function(res){
+        var p=res&&res.payload, rows=(p&&p.results)||[];
+        nsState={q:q, items:rows.map(function(x){
+          return {title:x.title||"(제목 없음)", url:x.url||"", path:x.path||""}; })};
+        renderNs();
+      })
+      .catch(function(e){
+        var code=e&&e.code, msg="찾지 못했습니다";
+        if(code==="not_in_manifest"||code==="consent_required") msg="노션 검색 사용을 허용해 주세요";
+        else if(code==="needs_reauth") msg="노션 재연결이 필요합니다";
+        else if(code==="server_not_connected") msg="노션이 연결되어 있지 않습니다";
+        else if(code==="blocked_by_policy"||code==="approval_required") msg="조직 정책으로 막혀 있습니다";
+        else if(code==="tool_error") msg=(e.message||"노션이 요청을 거절했습니다");
+        nsState={q:q,error:msg}; renderNs();
+      });
+  }
+
+  /* 노션 진행상태 바꾸기 — 되돌리기 어려우므로 반드시 확인을 거친다 */
+  function setStatus(id,to){
+    var t=tasks.filter(function(x){return x.id===id;})[0]; if(!t) return;
+    delete pending[id];
+    var local=function(){
+      t.state=(to==="완료")?"done":"todo";
+      var s2=SBY[t.owner];
+      if(s2 && s2.task===t.title){ s2.state="idle"; s2.task=null; }
+      refresh();
+    };
+    if(!t.url || !mcpNs){ local();
+      log(to==="완료"?"완료 처리":"되돌림","「"+t.title+"」"+(t.url?" (노션에 연결되지 않아 화면에만 반영)":""),true);
+      return;
+    }
+    var pid=pageIdOf(t.url);
+    if(!pid){ local(); log("완료 처리","「"+t.title+"」 — 노션 주소를 읽지 못해 화면에만 반영했습니다."); return; }
+    busyWrite[id]=true; refresh();
+    mcpNs.callTool("Notion","notion-update-page",
+      {page_id:pid, command:"update_properties", properties:{"진행상태":to}})
+      .then(function(){
+        delete busyWrite[id]; local();
+        log(to==="완료"?"완료 → 노션 저장":"되돌림 → 노션 저장","「"+t.title+"」 진행상태를 "+to+"로 바꿨습니다.",true);
+        if(mcpNs.invalidate) mcpNs.invalidate("Notion","notion-query-data-sources").catch(function(){});
+      })
+      .catch(function(e){
+        delete busyWrite[id];
+        var code=e&&e.code, msg;
+        if(code==="needs_reauth") msg="노션 연결이 만료됐습니다. 설정 → 커넥터에서 다시 연결해 주세요.";
+        else if(code==="server_not_connected") msg="노션이 연결되어 있지 않습니다.";
+        else if(code==="not_in_manifest"||code==="consent_required") msg="노션 수정 사용을 허용해 주셔야 합니다.";
+        else if(code==="blocked_by_policy"||code==="approval_required") msg="조직 정책이 이 수정을 막고 있습니다.";
+        else if(code==="tool_error") msg=(e.message||"노션이 수정을 거절했습니다.");
+        else msg="노션에 닿지 못했습니다. 저장됐는지 알 수 없으니 노션에서 확인한 뒤 다시 눌러 주세요.";
+        log("노션 저장 실패","「"+t.title+"」 — "+msg);
+        refresh();
+      });
   }
 
   function renderLog(){
@@ -1238,7 +1393,7 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     document.getElementById("clock").textContent=stamp();
     refresh();
   }
-  function refresh(){ renderEngines(); renderStaff(); renderOrg(); renderCatBar(); renderBoard(); renderLog(); }
+  function refresh(){ renderEngines(); renderStaff(); renderOrg(); renderCatBar(); renderBoard(); renderArchive(); renderLog(); }
 
   /* ═══════ 지시·승인 기록 ═══════ */
   var db=null, memos=[], memoStore="mem";
@@ -1373,6 +1528,7 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     }
     window.claude.use("mcp").then(function(mcp){
       if(!mcp){ onMcpError("not_granted"); return; }
+      mcpNs=mcp;
       mcp.watchTool("Notion","notion-query-data-sources",
         {data:{mode:"sql", data_source_urls:[DS], query:SQL}},
         function(ev){
@@ -1408,14 +1564,23 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
   document.getElementById("org").addEventListener("click",function(e){
     var b=e.target.closest("[data-sid]"); if(b){ selected=b.getAttribute("data-sid"); renderStaff(); renderOrg(); }
   });
-  document.getElementById("board").addEventListener("click",function(e){
+  function boardClick(e){
     var s=e.target.closest("[data-seat]"); if(s){ toggleTask(s.getAttribute("data-seat")); return; }
+    var d=e.target.closest("[data-done]"); if(d){ pending[d.getAttribute("data-done")]="done"; refresh(); return; }
+    var u=e.target.closest("[data-undo]"); if(u){ pending[u.getAttribute("data-undo")]="undo"; refresh(); return; }
+    var n=e.target.closest("[data-no]"); if(n){ delete pending[n.getAttribute("data-no")]; refresh(); return; }
+    var y=e.target.closest("[data-yes]");
+    if(y){ var id=y.getAttribute("data-yes");
+      setStatus(id, pending[id]==="undo" ? "접수" : "완료"); return; }
     var m=e.target.closest("[data-memo]");
     if(m){
       var t=tasks.filter(function(x){return x.id===m.getAttribute("data-memo");})[0];
       if(t){ document.getElementById("mtgt").value=t.title; document.getElementById("mtext").focus(); }
     }
-  });
+  }
+  document.getElementById("board").addEventListener("click",boardClick);
+  document.getElementById("archive").addEventListener("click",boardClick);
+  document.getElementById("btnNs").addEventListener("click",notionSearch);
   document.getElementById("catbar").addEventListener("click",function(e){
     var c=e.target.closest("[data-cat]");
     if(c){ catFilter=c.getAttribute("data-cat"); renderCatBar(); renderBoard(); }
@@ -1428,7 +1593,11 @@ button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);co
     renderBoard();
   });
   document.getElementById("q").addEventListener("input",function(e){
-    query=e.target.value.trim(); renderBoard();
+    query=e.target.value.trim(); renderBoard(); renderArchive();
+    if(!query){ nsState=null; renderNs(); }
+  });
+  document.getElementById("q").addEventListener("keydown",function(e){
+    if(e.key==="Enter") notionSearch();
   });
   document.getElementById("memoList").addEventListener("click",function(e){
     var b=e.target.closest("[data-mid]"); if(b) toggleMemo(b.getAttribute("data-mid"));
