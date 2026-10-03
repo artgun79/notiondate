@@ -1,23 +1,18 @@
 import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, '.', '');
-  return {
-    server: {
-      port: 3000,
-      host: '0.0.0.0',
+export default defineConfig(({ command }) => ({
+  // GitHub Pages 주소가 https://artgun79.github.io/notiondate/ 이므로 빌드할 때만 하위 경로를 붙인다.
+  base: command === 'build' ? '/notiondate/' : '/',
+  server: {
+    port: 3000,
+    host: '0.0.0.0',
+  },
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(import.meta.dirname, '.'),
     },
-    plugins: [react()],
-    define: {
-      'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-    },
-    resolve: {
-      alias: {
-        '@': path.resolve(import.meta.dirname, '.'),
-      },
-    },
-  };
-});
+  },
+}));
