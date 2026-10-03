@@ -1,0 +1,23 @@
+# 의존성·빌드 결과물
+node_modules
+dist
+dist-ssr
+*.local
+
+# 비밀 키 (절대 커밋 금지)
+.env
+.env.*
+!.env.example
+
+# Claude Code 개인 설정 (PC마다 다름)
+.claude/settings.local.json
+
+# 로그·에디터
+logs
+*.log
+npm-debug.log*
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
