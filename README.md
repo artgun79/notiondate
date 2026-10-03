@@ -15,16 +15,25 @@ winget install --id OpenJS.NodeJS.LTS -e
 설치가 끝나면 **Claude 앱과 PowerShell을 모두 닫았다가 다시 엽니다.** (Claude 앱은 Git이 있어야 로컬 세션을 엽니다.)
 
 ### 2. 저장소 내려받기
-```powershell
-New-Item -ItemType Directory -Force C:\AI_HUB\04_AI\Projects | Out-Null
+아래 명령은 명령 프롬프트(cmd)와 PowerShell 어디서나 됩니다.
+
+```bat
+mkdir C:\AI_HUB\04_AI\Projects
 cd C:\AI_HUB\04_AI\Projects
 git clone https://github.com/artgun79/notiondate.git
 cd notiondate
 ```
-GitHub 로그인 창이 뜨면 브라우저에서 로그인합니다.
+- 「이미 있습니다」·「already exists」 메시지는 무시해도 됩니다.
+- GitHub 로그인 창이 뜨면 브라우저에서 로그인합니다.
+- **이미 `notiondate` 폴더가 있으면** clone 대신 그 폴더에서 최신 내용만 받습니다.
+
+```bat
+cd C:\AI_HUB\04_AI\Projects\notiondate
+git pull
+```
 
 ### 3. 첫 설치 자동 실행
-```powershell
+```bat
 powershell -ExecutionPolicy Bypass -File scripts\setup-local.ps1
 ```
 Git·Node 확인 → `npm install` → `.env.local` 생성(메모장이 열리면 Gemini API 키 입력 후 저장) → 빌드 확인까지 자동으로 합니다.
