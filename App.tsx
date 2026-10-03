@@ -124,10 +124,11 @@ const App: React.FC = () => {
 
   const getWeatherIcon = (condition: string) => {
     const c = condition.toLowerCase();
+    if (c.includes('뇌우')) return <CloudLightning className="w-8 h-8 text-yellow-500" />;
     if (c.includes('맑음') || c.includes('sun')) return <Sun className="w-8 h-8 text-yellow-400" />;
     if (c.includes('비') || c.includes('rain')) return <CloudRain className="w-8 h-8 text-blue-400" />;
     if (c.includes('눈') || c.includes('snow')) return <CloudSnow className="w-8 h-8 text-blue-100" />;
-    if (c.includes('구름') || c.includes('흐림') || c.includes('cloud')) return <Cloud className="w-8 h-8 text-gray-400" />;
+    if (c.includes('구름') || c.includes('흐림') || c.includes('안개') || c.includes('cloud')) return <Cloud className="w-8 h-8 text-gray-400" />;
     return <Wind className="w-8 h-8 text-gray-300" />;
   };
 

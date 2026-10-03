@@ -1,6 +1,19 @@
 # Notion Hybrid Widget (노션 날짜·시계·날씨 위젯)
 
 노션에 끼워 넣는 작은 위젯입니다. 날짜·요일, 12시간제 시계, 실시간 날씨를 보여 줍니다.
+날씨는 Open-Meteo(키가 필요 없는 무료 날씨 서비스)를 씁니다.
+
+## 노션에 넣기
+1. 노션 페이지에서 `/embed`(또는 `/임베드`) 입력
+2. 아래 주소 붙여넣기 → **링크 임베드**
+
+```
+https://artgun79.github.io/notiondate/
+```
+
+3. 임베드 블록 모서리를 끌어 폭 약 200px 크기로 맞춥니다.
+
+`main` 브랜치에 바뀐 내용이 올라가면 GitHub Actions가 자동으로 다시 배포합니다(1~2분).
 
 ## Claude 데스크톱 앱에서 로컬 세션으로 작업하기
 
@@ -36,8 +49,7 @@ git pull
 ```bat
 powershell -ExecutionPolicy Bypass -File scripts\setup-local.ps1
 ```
-Git·Node 확인 → `npm install` → `.env.local` 생성(메모장이 열리면 Gemini API 키 입력 후 저장) → 빌드 확인까지 자동으로 합니다.
-`.env.local`이 이미 있으면 덮어쓰지 않습니다.
+Git·Node 확인 → `npm install` → 빌드 확인까지 자동으로 합니다. API 키는 필요 없습니다.
 
 ### 4. Claude 앱에서 로컬 세션 열기
 1. Claude 데스크톱 앱 → 위쪽 **Code** 탭
@@ -52,10 +64,11 @@ Claude는 이 폴더의 `CLAUDE.md`(프로젝트 설명)와 `.claude/settings.js
 |---|---|
 | 개발 서버 | `npm run dev` → http://localhost:3000 |
 | 배포용 빌드 | `npm run build` → `dist/` 폴더 |
+| 배포 | `main`에 push하면 자동 → https://artgun79.github.io/notiondate/ |
 | 타입 검사 | `npm run typecheck` |
 
 ## Claude 권한 설정 (`.claude/settings.json`)
 - 묻지 않고 실행: `npm install`, `npm run …`, `git status/diff/log/add/commit` 등 되돌리기 쉬운 명령
 - 항상 물어봄: `git push` 등 나머지 명령
-- 막아 둠: `.env` · `.env.local`(API 키) 읽기, 강제 push, `git reset --hard`
+- 막아 둠: `.env` · `.env.local` 읽기, 강제 push, `git reset --hard`
 - PC마다 다른 개인 설정은 `.claude/settings.local.json`에 둡니다(Git에 올라가지 않음).
